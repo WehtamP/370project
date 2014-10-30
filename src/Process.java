@@ -70,7 +70,7 @@ public class Process
 		if( IO_START == 0 )
 		{
 			STATE = PROCESS_STATE.ACTIVE_IO;
-			IO_START--;
+			IO_START = -1;
 		}
 		
 		if( STATE == PROCESS_STATE.ACTIVE_CPU )

@@ -31,7 +31,7 @@ public abstract class Scheduler {
 				updateCurrentProcess(p.getP_ID());
 				break;
 			case ACTIVE_IO:
-				if(p.getIO_BURST() == 0)
+				if(p.getIO_BURST() <= 0)
 					p.setSTATE(PROCESS_STATE.WAITING_CPU);
 				break;
 			default:
