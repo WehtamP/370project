@@ -1,6 +1,6 @@
 public class Debugging 
 {
-	//Function prints out all details of process provided by text file
+	//MP: Function prints out all details of process provided by text file
 	public static void printProcessInfo( Process process1 )
 	{
 		System.out.println( "P_ID =\t\t" + process1.getP_ID() );

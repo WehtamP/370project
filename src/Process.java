@@ -8,8 +8,8 @@ public class Process
 	private int PERIOD;
 	private int WAIT_TIME;
 	
-	//Constructor: arr = array with the 5 values in order:
-	//P_ID, CPU_BURST, IO_BURST, PRIORITY, PERIOD
+	//MP: Constructor: arr = array with the 5 values in order:
+	//MP: P_ID, CPU_BURST, IO_BURST, PRIORITY, PERIOD
 	public Process( int[] arr )
 	{
 		P_ID = arr[ 0 ];
@@ -22,37 +22,37 @@ public class Process
 		STATE = PROCESS_STATE.WAITING_CPU;
 	}
 	
-	public int getP_ID() //Accessor for P_ID
+	public int getP_ID() //MP: Accessor for P_ID
 	{
 		return P_ID;
 	}
 	
-	public int getCPU_BURST() //Accessor for CPU_BURST
+	public int getCPU_BURST() //MP: Accessor for CPU_BURST
 	{
 		return CPU_BURST;
 	}
 	
-	public int getIO_BURST() //Accessor for IO_BURST
+	public int getIO_BURST() //MP: Accessor for IO_BURST
 	{
 		return IO_BURST;
 	}
 	
-	public int getPRIORITY() //Accessor for PRIORITY
+	public int getPRIORITY() //MP: Accessor for PRIORITY
 	{
 		return PRIORITY;
 	}
 	
-	public int getPERIOD() //Accessor for PERIOD
+	public int getPERIOD() //MP: Accessor for PERIOD
 	{
 		return PERIOD;
 	}
 	
-	public int getWAIT_TIME() //Accessor for WAIT_TIME
+	public int getWAIT_TIME() //MP: Accessor for WAIT_TIME
 	{
 		return WAIT_TIME;
 	}
 	
-	public void setSTATE( PROCESS_STATE state1 ) //Mutator for STATE
+	public void setSTATE( PROCESS_STATE state1 ) //MP: Mutator for STATE
 	{
 		STATE = state1;
 	}
