@@ -8,5 +8,6 @@ public class Debugging
 		System.out.println( "I\\O_BURST =\t" + process1.getIO_BURST() );
 		System.out.println( "Priority =\t" + process1.getPRIORITY() );
 		System.out.println( "Period =\t" + process1.getPERIOD() );
+		System.out.println( "\n" );
 	}
 }

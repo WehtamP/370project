@@ -65,24 +65,28 @@ public class Process
 		STATE = state1;
 	}
 	
-	public boolean ioStart(){ //MG: Tells the scheduler if it's ready to start IO
-		return (IO_START == 0);
-	}
-
-	
 	public void act(int t)
 	{
+		if( IO_START == 0 )
+		{
+			STATE = PROCESS_STATE.ACTIVE_IO;
+			IO_START--;
+		}
+		
 		if( STATE == PROCESS_STATE.ACTIVE_CPU )
 		{
 			CPU_BURST--;
 			IO_START--;
 		}
-		else if( STATE == PROCESS_STATE.ACTIVE_IO )
-			IO_BURST--;
-		else if( STATE == PROCESS_STATE.WAITING_CPU )
-			WAIT_TIME++;
-		else if(STATE == PROCESS_STATE.INACTIVE)
+		if(STATE == PROCESS_STATE.INACTIVE)
 			if(t >= P_ID)
-			setSTATE(PROCESS_STATE.WAITING_CPU);
+				setSTATE(PROCESS_STATE.WAITING_CPU);
+		
+		if( STATE == PROCESS_STATE.ACTIVE_IO )
+			IO_BURST--;
+		
+		if( STATE == PROCESS_STATE.WAITING_CPU )
+			WAIT_TIME++;
+
 	}	
 }

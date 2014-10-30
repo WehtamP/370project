@@ -12,13 +12,9 @@ public class Runner
 		
 		Process[] processes = InputProcessing.readFile( "processList.dat" );
 		
-		for( Process p: processes )
-		{
-			Debugging.printProcessInfo( p );
-			System.out.println( "" );
-		}
+		FCFS_Scheduler sch = new FCFS_Scheduler( processes );
+		Simulation sim = new Simulation( sch );
 		
-		int quantum = InputProcessing.getQuantum( "processList.dat" );
-		System.out.println( quantum );
+		sim.run();
 	}
 }

@@ -1,17 +1,16 @@
-
 public abstract class Scheduler {
 	protected Process procs[];
-	protected int clock;
-	public Scheduler(Process ar[]){
-		procs = ar;
-		clock = 0;
+	protected boolean finished;
+	
+	public Scheduler(Process arr[]){
+		procs = arr;
+		finished = false;
 	}
 
-	protected void update(){   //MG: Does updates not related to moving things to/from the CPU/IO.
+	protected void update( int clock ){   //MG: Does updates not related to moving things to/from the CPU/IO.
 		for(Process p:procs){
 			p.act(clock);
 		}
-		clock++;
 	}
 	
 	protected abstract int chooseNext();  //MG: Responsible for deciding which process should go on the CPU
@@ -42,7 +41,7 @@ public abstract class Scheduler {
 	}
 	
 	protected void updateCurrentProcess(int pid){  //MG: If the current process needs to move, move it appropriately
-		if(procs[pid].ioStart()){ //MG: If the current proc. is ready for IO, move it to IO
+		if(procs[pid].getSTATE() == PROCESS_STATE.WAITING_IO ){ //MG: If the current proc. is ready for IO, move it to IO
 			procs[pid].setSTATE(PROCESS_STATE.ACTIVE_IO);
 		}
 		else if(procs[pid].getCPU_BURST() == 0){//MG: If the current process is done, set it to finished
@@ -53,18 +52,35 @@ public abstract class Scheduler {
 	protected void CPU_Update(){ //MG: if the current process leaves or is kicked, put on the new one and perform kicking.
 		int cur = getCurrentProc();
 		int next = chooseNext();
-		if(cur != next){
+		if(cur != next)
+		{
 			procs[next].setSTATE(PROCESS_STATE.ACTIVE_CPU); //MG: emplace new process
 			if(cur != -1)
 				procs[cur].setSTATE(PROCESS_STATE.WAITING_CPU); //MG: kick old process if necessary
 		}
+		
+		else if( next == -1 ) //FIX, THIS IS STUPID
+			finished = true;
 	}
 	
-	protected void step(){  //MG: Performs all operations within the timestep
+	public boolean isFinished() //Returns true if all processes are done, false otherwise (Accessor for finished)
+	{
+		return finished;
+	}
+	
+	public void step( int clock ){  //MG: Performs all operations within the timestep
 		clean();
 		CPU_Update();
-		update();
+		update( clock );
 		//TODO: send state info to log, which will figure out the ready queue
+	}
+	
+	public void printReadyQueue()
+	{
+		for( Process p: procs )
+		{
+			Debugging.printProcessInfo( p );
+		}
 	}
 	
 	
