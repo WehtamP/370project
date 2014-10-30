@@ -7,7 +7,7 @@ import java.io.IOException;
 //MP: Class that deals with the text file or strings
 public class InputProcessing 
 {
-	//MP: Function that retuns an array containing all of the processes when passed the data file's path
+	//MP: Function that returns an array containing all of the processes when passed the data file's path
 	public static Process[] readFile( String filepath ) throws IOException
 	{
 		int numProcesses, i;

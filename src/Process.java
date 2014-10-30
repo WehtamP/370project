@@ -7,6 +7,8 @@ public class Process
 	private int PRIORITY;
 	private int PERIOD;
 	private int WAIT_TIME;
+	private int IO_START;
+	
 	
 	//MP: Constructor: arr = array with the 5 values in order:
 	//MP: P_ID, CPU_BURST, IO_BURST, PRIORITY, PERIOD
@@ -17,6 +19,7 @@ public class Process
 		IO_BURST = arr[ 2 ];
 		PRIORITY = arr[ 3 ];
 		PERIOD = arr[ 4 ];
+		IO_START = CPU_BURST/2;
 		
 		WAIT_TIME = 0;
 		STATE = PROCESS_STATE.WAITING_CPU;
@@ -52,18 +55,34 @@ public class Process
 		return WAIT_TIME;
 	}
 	
+	public PROCESS_STATE getSTATE() //MG: Accessor for STATE
+	{
+		return STATE;
+	}
+	
 	public void setSTATE( PROCESS_STATE state1 ) //MP: Mutator for STATE
 	{
 		STATE = state1;
 	}
 	
-	public void act()
+	public boolean ioStart(){ //MG: Tells the scheduler if it's ready to start IO
+		return (IO_START == 0);
+	}
+
+	
+	public void act(int t)
 	{
 		if( STATE == PROCESS_STATE.ACTIVE_CPU )
+		{
 			CPU_BURST--;
+			IO_START--;
+		}
 		else if( STATE == PROCESS_STATE.ACTIVE_IO )
 			IO_BURST--;
 		else if( STATE == PROCESS_STATE.WAITING_CPU )
 			WAIT_TIME++;
-	}
+		else if(STATE == PROCESS_STATE.INACTIVE)
+			if(t >= P_ID)
+			setSTATE(PROCESS_STATE.WAITING_CPU);
+	}	
 }
