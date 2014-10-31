@@ -41,11 +41,11 @@ public abstract class Scheduler {
 	}
 	
 	protected void updateCurrentProcess(int pid){  //MG: If the current process needs to move, move it appropriately
-		if(procs[pid].getSTATE() == PROCESS_STATE.WAITING_IO ){ //MG: If the current proc. is ready for IO, move it to IO
-			procs[pid].setSTATE(PROCESS_STATE.ACTIVE_IO);
-		}
-		else if(procs[pid].getCPU_BURST() == 0){//MG: If the current process is done, set it to finished
+		if(procs[pid].getCPU_BURST() == 0){//MG: If the current process is done, set it to finished
 			procs[pid].setSTATE(PROCESS_STATE.FINISHED);
+		}
+		else if(procs[pid].getSTATE() == PROCESS_STATE.WAITING_IO && procs[pid].getIO_BURST() > 0){ //MG: If the current proc. is ready for IO, move it to IO
+			procs[pid].setSTATE(PROCESS_STATE.ACTIVE_IO);
 		}
 	}
 	
@@ -71,6 +71,7 @@ public abstract class Scheduler {
 	public void step( int clock ){  //MG: Performs all operations within the timestep
 		clean();
 		CPU_Update();
+		clean();
 		update( clock );
 		//TODO: send state info to log, which will figure out the ready queue
 	}

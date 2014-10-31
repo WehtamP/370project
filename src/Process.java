@@ -82,8 +82,9 @@ public class Process
 			if(t >= P_ID)
 				setSTATE(PROCESS_STATE.WAITING_CPU);
 		
-		if( STATE == PROCESS_STATE.ACTIVE_IO )
-			IO_BURST--;
+		if( STATE == PROCESS_STATE.ACTIVE_IO && IO_BURST > 0 )
+		//if(STATE == PROCESS_STATE.ACTIVE_IO)
+			IO_BURST-= 1;
 		
 		if( STATE == PROCESS_STATE.WAITING_CPU )
 			WAIT_TIME++;
