@@ -19,7 +19,7 @@ public class Process
 		IO_BURST = arr[ 2 ];
 		PRIORITY = arr[ 3 ];
 		PERIOD = arr[ 4 ];
-		IO_START = CPU_BURST/2;
+		IO_START = CPU_BURST / 2;
 		
 		WAIT_TIME = 0;
 		STATE = PROCESS_STATE.WAITING_CPU;
@@ -60,16 +60,21 @@ public class Process
 		return STATE;
 	}
 	
+	
+	public int getIO_START()
+	{
+		return IO_START;
+	}
+	
 	public void setSTATE( PROCESS_STATE state1 ) //MP: Mutator for STATE
 	{
 		STATE = state1;
 	}
 	
-	public void act(int t)
+	public void act()
 	{
 		if( IO_START == 0 )
 		{
-			STATE = PROCESS_STATE.ACTIVE_IO;
 			IO_START--;
 		}
 		
@@ -78,12 +83,12 @@ public class Process
 			CPU_BURST--;
 			IO_START--;
 		}
-		if(STATE == PROCESS_STATE.INACTIVE)
-			if(t >= P_ID)
-				setSTATE(PROCESS_STATE.WAITING_CPU);
 		
 		if( STATE == PROCESS_STATE.ACTIVE_IO )
+		{
+			IO_START--;
 			IO_BURST--;
+		}
 		
 		if( STATE == PROCESS_STATE.WAITING_CPU )
 			WAIT_TIME++;

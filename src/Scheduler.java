@@ -1,87 +1,105 @@
 public abstract class Scheduler {
-	protected Process procs[];
+	
+	protected Process processes[];
 	protected boolean finished;
 	
-	public Scheduler(Process arr[]){
-		procs = arr;
+	public Scheduler( Process procs[] )
+	{
+		processes = procs;
 		finished = false;
 	}
+	
+	public void act( int clock )
+	{
+		checkProcessor();		
+		for( Process p: processes )
+			p.act();
+		
+		clean( clock );
+	}
+	
+	public void checkProcessor()
+	{
+		Process currentProcess = getCurrentProcess();
+		Process nextProcess = chooseNext();
 
-	protected void update( int clock ){   //MG: Does updates not related to moving things to/from the CPU/IO.
-		for(Process p:procs){
-			p.act(clock);
+		if( currentProcess == nextProcess )
+			return;
+		
+		else if( currentProcess != null )
+			currentProcess.setSTATE( PROCESS_STATE.WAITING_CPU );
+		
+		System.out.println( "NEXT: " + nextProcess.getP_ID() );
+		nextProcess.setSTATE( PROCESS_STATE.ACTIVE_CPU );
+	}
+	
+	protected void clean( int clock )
+	{
+		cleanProcesses( clock );
+		cleanProcessor();
+	}
+	
+	protected void cleanProcesses( int clock )
+	{
+		for( Process p: processes )
+		{					
+			if( p.getIO_START() == 0 )
+				p.setSTATE( PROCESS_STATE.ACTIVE_IO );
+			
+			if( p.getSTATE() == PROCESS_STATE.ACTIVE_IO && p.getIO_BURST() <= 0 )
+				p.setSTATE( PROCESS_STATE.WAITING_CPU );
+			
+			if( p.getSTATE() == PROCESS_STATE.WAITING_IO )
+				p.setSTATE( PROCESS_STATE.ACTIVE_IO );
+			
+			if( p.getSTATE() == PROCESS_STATE.INACTIVE )
+				if( p.getP_ID() == clock )
+					p.setSTATE( PROCESS_STATE.WAITING_CPU );
 		}
 	}
 	
-	protected abstract int chooseNext();  //MG: Responsible for deciding which process should go on the CPU
-	
-	protected int getCurrentProc(){
-		for(Process p:procs){
-			if(p.getSTATE() == PROCESS_STATE.ACTIVE_CPU){
-				return p.getP_ID();
-			}
-		}
-		return -1;
-	}
-	
-	protected void clean(){         //MG: Removes processes from CPU and IO as needed
-		for(Process p:procs){
-			switch(p.getSTATE()){
-			case ACTIVE_CPU:
-				updateCurrentProcess(p.getP_ID());
-				break;
-			case ACTIVE_IO:
-				if(p.getIO_BURST() == 0)
-					p.setSTATE(PROCESS_STATE.WAITING_CPU);
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	
-	protected void updateCurrentProcess(int pid){  //MG: If the current process needs to move, move it appropriately
-		if(procs[pid].getSTATE() == PROCESS_STATE.WAITING_IO ){ //MG: If the current proc. is ready for IO, move it to IO
-			procs[pid].setSTATE(PROCESS_STATE.ACTIVE_IO);
-		}
-		else if(procs[pid].getCPU_BURST() == 0){//MG: If the current process is done, set it to finished
-			procs[pid].setSTATE(PROCESS_STATE.FINISHED);
-		}
-	}
-	
-	protected void CPU_Update(){ //MG: if the current process leaves or is kicked, put on the new one and perform kicking.
-		int cur = getCurrentProc();
-		int next = chooseNext();
-		if(cur != next)
+	protected void cleanProcessor()
+	{
+		Process p = getCurrentProcess();
+		
+		if( p != null )
 		{
-			procs[next].setSTATE(PROCESS_STATE.ACTIVE_CPU); //MG: emplace new process
-			if(cur != -1)
-				procs[cur].setSTATE(PROCESS_STATE.WAITING_CPU); //MG: kick old process if necessary
+			if( p.getCPU_BURST() == 0 )
+				p.setSTATE( PROCESS_STATE.FINISHED );
+		}
+	}
+	
+	protected Process getCurrentProcess()
+	{
+		for( Process p: processes )
+		{
+			if( p.getSTATE() == PROCESS_STATE.ACTIVE_CPU )
+				return p;
 		}
 		
-		else if( next == -1 ) //FIX, THIS IS STUPID
-			finished = true;
-	}
-	
-	public boolean isFinished() //Returns true if all processes are done, false otherwise (Accessor for finished)
-	{
-		return finished;
-	}
-	
-	public void step( int clock ){  //MG: Performs all operations within the timestep
-		clean();
-		CPU_Update();
-		update( clock );
-		//TODO: send state info to log, which will figure out the ready queue
+		return null;
 	}
 	
 	public void printReadyQueue()
 	{
-		for( Process p: procs )
+		for( Process p: processes )
 		{
 			Debugging.printProcessInfo( p );
 		}
 	}
 	
+	public boolean isFinished()
+	{
+		finished = true;
+		
+		for( Process p: processes )
+		{
+			if( p.getSTATE() != PROCESS_STATE.FINISHED )
+				finished = false;
+		}
+		
+		return finished;
+	}
 	
+	protected abstract Process chooseNext();
 }

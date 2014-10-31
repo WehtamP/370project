@@ -20,6 +20,7 @@ public class InputProcessing
 			if( ( numProcesses = getNumberOnLine( buf.readLine() ) ) == -1 )//MP: Get the number of processes by feeding first line to function, test for failure
 			{
 				System.out.println( "There was an error parsing the text file" );
+				buf.close();
 				return null;
 			}
 			buf.readLine(); //MP: Skip the second line, quantum not important

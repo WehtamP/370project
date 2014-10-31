@@ -15,15 +15,18 @@ public class Simulation
 	
 	public void run() //Start Simulation
 	{
+		int numSteps = 0;
+		
 		while( !sch.isFinished() ) //MP: Run simulation until all processes are finished
 		{
-			sch.step( CLOCK );
+			sch.act( CLOCK );
 			sch.printReadyQueue();
 			System.out.println( "//////////////////////\n" );
 			CLOCK++;
+			numSteps++;
 		}
 		
-		System.out.println( "MADE IT" );
+		System.out.println( "Total steps: " + numSteps );
 	}
 	
 	public int getAVERAGE_WAIT_TIME() //MP: Accessor for AVERAGE_WAIT_TIME
