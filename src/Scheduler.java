@@ -59,13 +59,21 @@ public abstract class Scheduler {
 				procs[cur].setSTATE(PROCESS_STATE.WAITING_CPU); //MG: kick old process if necessary
 		}
 		
-		else if( next == -1 ) //FIX, THIS IS STUPID
+		else if( next == -1 && hasIO() == false) //FIX, THIS IS STUPID
 			finished = true;
 	}
 	
 	public boolean isFinished() //Returns true if all processes are done, false otherwise (Accessor for finished)
 	{
 		return finished;
+	}
+	
+	protected boolean hasIO(){
+		for(Process p:procs){
+			if(p.getSTATE() == PROCESS_STATE.ACTIVE_IO)
+				return true;
+		}
+		return false;
 	}
 	
 	public void step( int clock ){  //MG: Performs all operations within the timestep
