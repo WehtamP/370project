@@ -1,9 +1,11 @@
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 public class FCFS_Scheduler extends Scheduler
 {
 
 	public FCFS_Scheduler( Process[] arr ) 
 	{
-		super( arr );
+		super(new ConcurrentLinkedQueue<Process>(), arr );
 	}
 	
 	protected Process chooseNext() //MP: Function that determines which process should execute on the CPU.

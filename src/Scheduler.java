@@ -1,13 +1,22 @@
+import java.util.Collection;
+
 public abstract class Scheduler {
 	
-	protected Process processes[];
+	protected Collection<Process> processes;
 	protected boolean finished;
 	
-	public Scheduler( Process procs[] )
+	
+	//MG: Constructs based on an empty collection and an array of processes.
+	//MG: This allows individual schedulers to use different types of collections.
+	public Scheduler( Collection<Process> eColl, Process procs[] )
 	{
-		processes = procs;
+		processes = eColl;
+		for(Process p: procs){
+			processes.add(p);
+		}
 		finished = false;
 	}
+	
 	
 	public void act( int clock )
 	{
