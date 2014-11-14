@@ -21,6 +21,9 @@ public class Process
 		PERIOD = arr[ 4 ];
 		IO_START = CPU_BURST / 2;
 		
+		if( IO_BURST == 0 )
+			IO_START = -1;
+		
 		WAIT_TIME = 0;
 		STATE = PROCESS_STATE.WAITING_CPU;
 	}

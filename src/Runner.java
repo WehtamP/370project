@@ -15,5 +15,6 @@ public class Runner
 		FCFS_Scheduler sch = new FCFS_Scheduler( processes );
 		Simulation sim = new Simulation( sch );
 		sim.run();
+		sim.generateLog();
 	}
 }

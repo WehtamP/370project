@@ -2,15 +2,20 @@ import java.util.Collection;
 
 public abstract class Scheduler {
 	
+	protected Process[] originalProcessList;
 	protected Collection<Process> processes;
 	protected boolean finished;
+	protected int unutilizedCycles;
 	
 	
 	//MG: Constructs based on an empty collection and an array of processes.
 	//MG: This allows individual schedulers to use different types of collections.
 	public Scheduler( Collection<Process> eColl, Process procs[] )
 	{
+		unutilizedCycles = 0;
+		originalProcessList = procs;
 		processes = eColl;
+		
 		for(Process p: procs){
 			processes.add(p);
 		}
@@ -20,15 +25,68 @@ public abstract class Scheduler {
 	
 	public void act( int clock )
 	{
-		checkProcessor();		
+		clean();
+		checkProcessor();
 		for( Process p: processes )
 			p.act();
+
 		
-		clean( clock );
+		Process pr = getCurrentProcess();
+		if( pr == null )
+		{
+			unutilizedCycles++;
+		}
+		
+		setFinished();
 	}
 	
-	public void checkProcessor()
+	//MP: Checks to see if any processes are finished, sets their state to finished
+	protected void setFinished()
 	{
+		for( Process p: processes )
+		{
+			if( p != null )
+			{
+				if( p.getCPU_BURST() == 0 )
+					p.setSTATE( PROCESS_STATE.FINISHED );
+
+			}
+		}
+	}
+	
+	protected void clean()
+	{
+		for( Process p: processes )
+		{
+			if( p.getSTATE() == PROCESS_STATE.ACTIVE_IO && p.getIO_BURST() == 0 )
+				p.setSTATE( PROCESS_STATE.WAITING_CPU );
+			
+			if( p != null )
+			{
+				if( p.getCPU_BURST() == 0 )
+					p.setSTATE( PROCESS_STATE.FINISHED );
+				
+				if( p.getIO_START() == 0 )
+					p.setSTATE( PROCESS_STATE.ACTIVE_IO );
+			}
+		}
+		
+		
+	}
+	
+	protected void checkProcessor()
+	{
+		Process p = getCurrentProcess();
+		
+		if( p != null )
+		{
+			if( p.getCPU_BURST() == 0 )
+				p.setSTATE( PROCESS_STATE.FINISHED );
+			
+			if( p.getIO_START() == 0 )
+				p.setSTATE( PROCESS_STATE.ACTIVE_IO );
+		}
+		
 		Process currentProcess = getCurrentProcess();
 		Process nextProcess = chooseNext();
 
@@ -38,44 +96,7 @@ public abstract class Scheduler {
 		else if( currentProcess != null )
 			currentProcess.setSTATE( PROCESS_STATE.WAITING_CPU );
 		
-		System.out.println( "NEXT: " + nextProcess.getP_ID() );
 		nextProcess.setSTATE( PROCESS_STATE.ACTIVE_CPU );
-	}
-	
-	protected void clean( int clock )
-	{
-		cleanProcesses( clock );
-		cleanProcessor();
-	}
-	
-	protected void cleanProcesses( int clock )
-	{
-		for( Process p: processes )
-		{					
-			if( p.getIO_START() == 0 )
-				p.setSTATE( PROCESS_STATE.ACTIVE_IO );
-			
-			if( p.getSTATE() == PROCESS_STATE.ACTIVE_IO && p.getIO_BURST() <= 0 )
-				p.setSTATE( PROCESS_STATE.WAITING_CPU );
-			
-			if( p.getSTATE() == PROCESS_STATE.WAITING_IO )
-				p.setSTATE( PROCESS_STATE.ACTIVE_IO );
-			
-			if( p.getSTATE() == PROCESS_STATE.INACTIVE )
-				if( p.getP_ID() == clock )
-					p.setSTATE( PROCESS_STATE.WAITING_CPU );
-		}
-	}
-	
-	protected void cleanProcessor()
-	{
-		Process p = getCurrentProcess();
-		
-		if( p != null )
-		{
-			if( p.getCPU_BURST() == 0 )
-				p.setSTATE( PROCESS_STATE.FINISHED );
-		}
 	}
 	
 	protected Process getCurrentProcess()
@@ -110,5 +131,26 @@ public abstract class Scheduler {
 		return finished;
 	}
 	
+	public float getAverageWaitTime()
+	{
+		float waitTime = 0;
+		
+		for( Process p: originalProcessList )
+			waitTime += p.getWAIT_TIME() / ( float )this.getNumProcesses();
+		
+		return waitTime;
+	}
+	
+	public int getNumProcesses()
+	{
+		return originalProcessList.length;
+	}
+	
+	public int getUnutilizedCycles()
+	{
+		return unutilizedCycles;
+	}
+	
 	protected abstract Process chooseNext();
+	protected abstract String getName();
 }
