@@ -25,9 +25,8 @@ public class Simulation
 		while( !SCHEDULER.isFinished() ) //MP: Run simulation until all processes are finished
 		{
 			CLOCK++;
-			Process p;
 			SCHEDULER.act( CLOCK );
-			p = SCHEDULER.getCurrentProcess();
+			Process p = SCHEDULER.getLastProcess();
 			
 			if( p == null )
 			{
@@ -46,7 +45,7 @@ public class Simulation
 	{
 
 		THROUGHPUT = SCHEDULER.getNumProcesses() / ( double )CLOCK;
-		AVERAGE_WAIT_TIME = Math.round( SCHEDULER.getAverageWaitTime() * 100 ) / 100;
+		AVERAGE_WAIT_TIME = Math.round( SCHEDULER.getAverageWaitTime() * 100 ) / (float )100;
 		CPU_UTILIZATION = ( CLOCK - SCHEDULER.getUnutilizedCycles() ) / ( float )CLOCK;
 		
 	}

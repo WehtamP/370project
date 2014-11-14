@@ -6,6 +6,7 @@ public abstract class Scheduler {
 	protected Collection<Process> processes;
 	protected boolean finished;
 	protected int unutilizedCycles;
+	protected Process lastExecutedProcess;
 	
 	
 	//MG: Constructs based on an empty collection and an array of processes.
@@ -27,6 +28,7 @@ public abstract class Scheduler {
 	{
 		clean();
 		checkProcessor();
+		lastExecutedProcess = getCurrentProcess();
 		for( Process p: processes )
 			p.act();
 
@@ -149,6 +151,11 @@ public abstract class Scheduler {
 	public int getUnutilizedCycles()
 	{
 		return unutilizedCycles;
+	}
+	
+	public Process getLastProcess()
+	{
+		return lastExecutedProcess;
 	}
 	
 	protected abstract Process chooseNext();
