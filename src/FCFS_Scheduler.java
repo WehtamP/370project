@@ -19,13 +19,22 @@ public class FCFS_Scheduler extends Scheduler
 			if(q.peek().getSTATE() == PROCESS_STATE.FINISHED){
 				q.remove();
 			}
+			if(q.peek().getSTATE() == PROCESS_STATE.WAITING_CPU){
+				return q.peek();
+			}
 			for(int i = 0; i < q.size(); i++){
-				Process temp = q.remove();
-				q.add(temp);
+				q.add(q.remove());
 				if(q.peek().getSTATE() == PROCESS_STATE.WAITING_CPU)					
 					return q.peek();
 			}
 		}
+		return null;
+	}
+	
+	@Override
+	protected Process getCurrentProcess(){
+		if(q.peek().getSTATE() == PROCESS_STATE.ACTIVE_CPU)
+			return q.peek();
 		return null;
 	}
 	
