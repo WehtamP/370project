@@ -7,6 +7,8 @@ import java.io.IOException;
 //MP: Class that deals with the text file or strings
 public class InputProcessing 
 {
+	private static int quantum;
+	
 	//MP: Function that returns an array containing all of the processes when passed the data file's path
 	public static Process[] readFile( String filepath ) throws IOException
 	{
@@ -23,7 +25,7 @@ public class InputProcessing
 				buf.close();
 				return null;
 			}
-			buf.readLine(); //MP: Skip the second line, quantum not important
+			quantum = getNumberOnLine( buf.readLine() ); //MP: Read in the quantum
 			buf.readLine(); //MP: Skip the third line, headers not important
 			
 			Process[] processes = new Process[ numProcesses ];
@@ -46,33 +48,8 @@ public class InputProcessing
 	
 	//MP: Function to retrieve the quantum from the file
 	//MP: Returns -1 on failure
-	public static int getQuantum( String filename )
-	{
-		int quantum = -1;
-		File text = new File( filename );
-		
-		try //MP: Open file in BufferedReader, if fail to find file catch
-		{
-			BufferedReader buf = new BufferedReader( new FileReader( text ) ); 
-			
-			buf.readLine(); //MP: Skip first line, not important
-			if( ( quantum = getNumberOnLine( buf.readLine() ) ) == -1 )//MP: Get the number of processes by feeding first line to function, test for failure
-			{
-				System.out.println( "There was an error parsing the text file" );
-				buf.close();
-				return quantum;
-			}
-			
-			buf.close();
-			return quantum;
-		} 
-		
-		catch( IOException e )
-		{
-			System.out.println( "There was an error reading the file. Printing stack trace" );
-			e.printStackTrace();
-		}
-		
+	public static int getQuantum()
+	{	
 		return quantum;
 	}
 	

@@ -17,13 +17,14 @@ public abstract class Scheduler {
 		originalProcessList = procs;
 		processes = eColl;
 		
-		for(Process p: procs){
+		for(Process p: procs){ //MP: Loop adds processes in procs to the collection processes
 			processes.add(p);
 		}
-		finished = false;
+		finished = false; //MP: Var that will determine when all processes have finished executing
 	}
 	
 	
+	//MP: Method that causes all of the processes to act
 	public void act( int clock )
 	{
 		clean();
