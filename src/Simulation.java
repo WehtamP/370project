@@ -69,7 +69,7 @@ public class Simulation
 				System.out.print( "PID " + p.getP_ID() + " >> " );
 				i++;
 				if( ( i %= 6 ) == 0 )
-					System.out.println();
+					System.out.print( "\n\t" );
 			}
 		}	
 		

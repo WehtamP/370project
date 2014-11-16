@@ -1,4 +1,5 @@
 import java.util.Collection;
+import java.util.LinkedList;
 
 public abstract class Scheduler {
 	
@@ -7,6 +8,7 @@ public abstract class Scheduler {
 	protected boolean finished;
 	protected int unutilizedCycles;
 	protected Process lastExecutedProcess;
+	protected LinkedList< Process > IO;
 	
 	
 	//MG: Constructs based on an empty collection and an array of processes.
@@ -14,14 +16,13 @@ public abstract class Scheduler {
 	public Scheduler( Collection<Process> eColl, Process procs[] )
 	{
 		unutilizedCycles = 0;
-		
+		IO = new LinkedList< Process >();
 		originalProcessList = new Process[ procs.length ];
 		
 		//MP: Clone the processes in procs so that every other scheduler has separate copies.
 		for( int i = 0; i < procs.length; i++ )
 		{
 			originalProcessList[ i ] = new Process( procs[ i ] );
-			Debugging.printProcessInfo( originalProcessList[ i ] );
 		}
 		
 		processes = eColl;
@@ -42,6 +43,8 @@ public abstract class Scheduler {
 		
 		lastExecutedProcess = getCurrentProcess();
 		for( Process p: processes )
+			p.act();
+		for( Process p: IO )
 			p.act();
 
 		if( lastExecutedProcess == null ) //MP: If no process executed, unutilized cycle counter incremented
@@ -67,10 +70,14 @@ public abstract class Scheduler {
 	//MP: Function that cleans all processes that are not on the CPU by correcting their states.
 	protected void cleanIO()
 	{
-		for( Process p: processes )
+		for( Process p: IO )
 		{
-			if( p.getSTATE() == PROCESS_STATE.ACTIVE_IO && p.getIO_BURST() == 0 ) //MP: If done with IO Burst, start waiting for CPU
+			if( p.getIO_BURST() == 0 ) //MP: If done with IO Burst, start waiting for CPU
+			{
 				p.setSTATE( PROCESS_STATE.WAITING_CPU );
+				IO.remove( p );
+				processes.add( p );
+			}
 		}
 		
 		
@@ -83,8 +90,12 @@ public abstract class Scheduler {
 		
 		if( p != null )
 		{
-			if( p.getIO_START() == 0 ) //If the process is ready for IO Burst, send to IO.
+			if( p.getIO_START() == 0 ) //MP: If the process is ready for IO Burst, send to IO.
+			{
 				p.setSTATE( PROCESS_STATE.ACTIVE_IO );
+				processes.remove( p );
+				IO.add( p );
+			}
 		}
 		
 		Process currentProcess = getCurrentProcess();
