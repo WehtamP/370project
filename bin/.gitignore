@@ -1,4 +1,11 @@
-/Sim_Enum.class
-/RankingGenerator.class
-/Sim_Type.class
+/FCFS_Scheduler.class
+/InputProcessing.class
 /Methods.class
+/PROCESS_STATE.class
+/Process.class
+/RR_Scheduler.class
+/RankingGenerator.class
+/Runner.class
+/Scheduler.class
+/Sim_Type.class
+/Simulation.class
