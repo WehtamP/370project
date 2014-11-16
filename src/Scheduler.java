@@ -41,11 +41,19 @@ public abstract class Scheduler {
 		cleanIO();
 		cleanProcessor(); 
 		
-		lastExecutedProcess = getCurrentProcess();
-		for( Process p: processes )
+		System.out.println("====================");
+		
+		Process temp = getCurrentProcess();
+		if(temp != null)
+			lastExecutedProcess = temp;
+		for( Process p: processes ){
 			p.act();
-		for( Process p: IO )
+		Debugging.printProcessInfo(p);
+		}
+		for( Process p: IO ){
 			p.act();
+		Debugging.printProcessInfo(p);
+		}
 
 		if( lastExecutedProcess == null ) //MP: If no process executed, unutilized cycle counter incremented
 			unutilizedCycles++;
@@ -72,7 +80,7 @@ public abstract class Scheduler {
 	{
 		for( Process p: IO )
 		{
-			if( p.getIO_BURST() == 0 ) //MP: If done with IO Burst, start waiting for CPU
+			if( p.getIO_BURST() <= 0 ) //MP: If done with IO Burst, start waiting for CPU
 			{
 				p.setSTATE( PROCESS_STATE.WAITING_CPU );
 				IO.remove( p );

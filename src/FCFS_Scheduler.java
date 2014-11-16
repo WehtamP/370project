@@ -48,21 +48,6 @@ public class FCFS_Scheduler extends Scheduler
 		return "FCFS";
 	}
 
-	//MG: Modifies clean() so that it moves elements that are on IO to the end, avoiding the need for separate storage
-	@Override
-	protected void cleanIO(){
-		super.cleanIO();
-		ConcurrentLinkedQueue<Process> temp = new ConcurrentLinkedQueue<Process>();
-		for(Process p:q){
-			if(p.getSTATE() == PROCESS_STATE.ACTIVE_IO){
-				q.remove(p);
-				temp.add(p);
-			}
-		}
-		for(Process p:temp){
-			temp.remove(p);
-			q.add(p);
-		}
-	}
+	
 
 }
