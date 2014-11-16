@@ -62,6 +62,8 @@ public class Simulation
 		int i = 0;
 		
 		//MP: Rather complicated text processing to make the output look like the sample output.
+		System.out.print( "\t" );
+		
 		for( Process p: EXECUTION_LIST ) //MP: Execution list is linked list of processes executed in order.
 		{
 			if( p != null )
@@ -97,5 +99,20 @@ public class Simulation
 	public int getTURNAROUND_TIME() //MP: Accessor for TURNAROUND TIME
 	{
 		return TURNAROUND_TIME;
+	}
+	
+	//MP: Method to return the name of the scheduler being simulator
+	public String getSchedulerName()
+	{
+		return SCHEDULER.getName();
+	}
+	
+	//MP: Method that returns whether a simulation is realtime or normal
+	public Sim_Type getSimulationType()
+	{
+		if( SCHEDULER.getName().equals( "PRM" ) || SCHEDULER.getName().equals( "EDF" ) )
+			return Sim_Type.Realtime;
+		
+		return Sim_Type.Normal;
 	}
 }
