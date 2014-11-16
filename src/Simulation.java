@@ -8,16 +8,15 @@ public class Simulation
 	private int CLOCK;
 	private float AVERAGE_WAIT_TIME;
 	private double CPU_UTILIZATION;
-	private int UNUTILIZED_CYCLE_COUNT;
 	private LinkedList<Process> EXECUTION_LIST;
 	
+	//MP: Constructor for Simulation
 	public Simulation( Scheduler s )
 	{
-		UNUTILIZED_CYCLE_COUNT = 0;
 		SCHEDULER = s;
 		CLOCK = 0;
 		EXECUTION_LIST = new LinkedList< Process >();
-		EXECUTION_LIST.add( null );
+		EXECUTION_LIST.add( null ); //MP: Add null to the linked list so no errors occur when trying to remove element before any exist.
 	}
 	
 	public void run() //Start Simulation
@@ -28,20 +27,14 @@ public class Simulation
 			SCHEDULER.act( CLOCK );
 			Process p = SCHEDULER.getLastProcess();
 			
-			if( p == null )
-			{
-				UNUTILIZED_CYCLE_COUNT++;
-				continue;
-			}
-			
-			if( !p.equals( EXECUTION_LIST.getLast() ) )
+			if( !p.equals( EXECUTION_LIST.getLast() ) ) //MP: If the process on the CPU is not the same as the last process that was on the CPU, add to list.
 				EXECUTION_LIST.add( p );
 		}
 		
 		calcValues();
 	}
 	
-	private void calcValues()
+	private void calcValues() //MP: Calculates statistics after running, should be self explanatory
 	{
 
 		THROUGHPUT = SCHEDULER.getNumProcesses() / ( double )CLOCK;
@@ -50,7 +43,7 @@ public class Simulation
 		
 	}
 	
-	public void generateLog()
+	public void generateLog() //MP: Prints out all of the data. NEEDS TO BE CHANGED TO TEXT FILE OUTPUT
 	{
 		System.out.println( "======================================================" );
 		System.out.println( "Final Report for " + SCHEDULER.getName() );
@@ -68,7 +61,8 @@ public class Simulation
 	{
 		int i = 0;
 		
-		for( Process p: EXECUTION_LIST )
+		//MP: Rather complicated text processing to make the output look like the sample output.
+		for( Process p: EXECUTION_LIST ) //MP: Execution list is linked list of processes executed in order.
 		{
 			if( p != null )
 			{
@@ -103,10 +97,5 @@ public class Simulation
 	public int getTURNAROUND_TIME() //MP: Accessor for TURNAROUND TIME
 	{
 		return TURNAROUND_TIME;
-	}
-	
-	public int getUNUTILIZED_CYCLE_COUNT()
-	{
-		return UNUTILIZED_CYCLE_COUNT;
 	}
 }

@@ -14,14 +14,33 @@ public class Process
 	//MP: P_ID, CPU_BURST, IO_BURST, PRIORITY, PERIOD
 	public Process( int[] arr )
 	{
+		//MP: Set Process values to corresponding array values
 		P_ID = arr[ 0 ];
 		CPU_BURST = arr[ 1 ];
 		IO_BURST = arr[ 2 ];
 		PRIORITY = arr[ 3 ];
 		PERIOD = arr[ 4 ];
-		IO_START = CPU_BURST / 2;
+		IO_START = CPU_BURST / 2; //MP: IO bursts start after 1/2 CPU burst done.
 		
-		if( IO_BURST == 0 )
+		if( IO_BURST == 0 ) //MP: If no IO_BURST, set IO_START to -1
+			IO_START = -1;
+		
+		WAIT_TIME = 0;
+		STATE = PROCESS_STATE.WAITING_CPU;
+	}
+	
+	//MP: Process constructor for cloning
+	public Process ( Process p ) 
+	{
+		P_ID = p.getP_ID();
+		CPU_BURST = p.getCPU_BURST();
+		IO_BURST = p.getIO_BURST();
+		PRIORITY = p.getPRIORITY();
+		PERIOD = p.getPERIOD();
+		
+		IO_START = CPU_BURST / 2; //MP: IO bursts start after 1/2 CPU burst done.
+		
+		if( IO_BURST == 0 ) //MP: If no IO_BURST, set IO_START to -1
 			IO_START = -1;
 		
 		WAIT_TIME = 0;
@@ -64,7 +83,7 @@ public class Process
 	}
 	
 	
-	public int getIO_START()
+	public int getIO_START() //MP: Accessor for IO_START
 	{
 		return IO_START;
 	}
@@ -74,26 +93,25 @@ public class Process
 		STATE = state1;
 	}
 	
-	public void act()
+	public void act() //MP: Updates process values (WAIT_TIME, IO_BURST, IO_START, CPU_BURST) depending on the state of process when this method is called
 	{
-		if( IO_START == 0 )
+		if( IO_START == 0 ) //MP: If the process has started IO Burst, set IO_START to be > 0 so that it doesn't start IO Bursting again.
 		{
 			IO_START--;
 		}
 		
-		if( STATE == PROCESS_STATE.ACTIVE_CPU )
+		if( STATE == PROCESS_STATE.ACTIVE_CPU ) //MP: If Process is active in CPU, the CPU burst time decreases and the time until starting IO Burst decreases
 		{
 			CPU_BURST--;
 			IO_START--;
 		}
 		
-		if( STATE == PROCESS_STATE.ACTIVE_IO )
+		if( STATE == PROCESS_STATE.ACTIVE_IO ) //MP: If Process is active in IO, the IO burst time decreases.
 		{
-			IO_START--;
 			IO_BURST--;
 		}
 		
-		if( STATE == PROCESS_STATE.WAITING_CPU )
+		if( STATE == PROCESS_STATE.WAITING_CPU ) //MP: If the process is waiting for the CPU, its total wait time increases.
 			WAIT_TIME++;
 
 	}	
