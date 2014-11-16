@@ -63,8 +63,8 @@ public class RR_Scheduler extends Scheduler
 	//MG: Modifies clean() so that it moves elements that are on IO to the end, avoiding the need for separate storage
 	//Copied from FCFS_Scheduler
 	@Override
-	protected void clean(){
-		super.clean();
+	protected void cleanIO(){
+		super.cleanIO();
 		ConcurrentLinkedQueue<Process> temp = new ConcurrentLinkedQueue<Process>();
 		for(Process p:q){
 			if(p.getSTATE() == PROCESS_STATE.ACTIVE_IO){
