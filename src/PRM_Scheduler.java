@@ -24,9 +24,6 @@ public class PRM_Scheduler extends RTScheduler {
 			return true;
 		}
 
-
-
-
 		//MG: Blocks anything with a CPU Burst of 0 or lower
 		if(p2.getSTATE() == PROCESS_STATE.FINISHED){
 			return false;
