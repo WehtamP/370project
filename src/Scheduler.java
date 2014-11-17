@@ -40,14 +40,14 @@ public abstract class Scheduler {
 		Process temp = getCurrentProcess();
 		if(temp != null)
 			lastExecutedProcess = temp;
-		for( Process p: processes ){
+		
+		for( Process p: processes )
 			p.act();
-		}
-		for( Process p: IO ){
+		
+		for( Process p: IO )
 			p.act();
-		}
 
-		if( lastExecutedProcess == null ) //MP: If no process executed, unutilized cycle counter incremented
+		if( temp == null ) //MP: If no process executed, unutilized cycle counter incremented
 			unutilizedCycles++;
 		
 		setFinished(); //MP: Check to see if any processes are finished
