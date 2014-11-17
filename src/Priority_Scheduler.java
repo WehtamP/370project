@@ -14,18 +14,18 @@ public class Priority_Scheduler extends Scheduler {
 		
 		//MG: Ensures nothing 0/negative goes through
 		if(p2.getCPU_BURST() <= 0){
-			//////System.out.println(.*);
+			
 			p2.setSTATE(PROCESS_STATE.FINISHED);
 			return false;
 		}
 		
 		//MG: If nothing has been selected yet, default to the applicable competitor
 				if(p1 == null){
-					//////System.out.println(.*);
+					
 					return true;
 				}
 		
-				//////System.out.println(.*);
+				
 				
 		
 		//MG: Blocks anything with a CPU Burst of 0 or lower
@@ -36,30 +36,30 @@ public class Priority_Scheduler extends Scheduler {
 					
 		//MG: Choose the one with a lower priority
 		if(p1.getPRIORITY() < p2.getPRIORITY() && p1.getCPU_BURST() > 0){
-			//////System.out.println(.*);
+			
 			return false;
 		}
 		else if(p1.getPRIORITY() > p2.getPRIORITY() && p2.getCPU_BURST() > 0){
-			//////System.out.println(.*);
+			
 			return true;
 		}
 		
 		//MG: If the current process is active, don't overwrite it.
 		if(p1.getSTATE() == PROCESS_STATE.ACTIVE_CPU){
-			//////System.out.println(.*);
+			
 			return false;
 		}
 		
 		//MG: If p2 is active, choose it.
 		if(p2.getSTATE() == PROCESS_STATE.ACTIVE_CPU){
-			//////System.out.println(.*);
+			
 			return true;
 		}
 		
 		else {
 			
 			//MG: Bakery choice
-			//////System.out.println(.*);
+			
 			return (p1.getP_ID() > p2.getP_ID());
 		}
 	}
@@ -73,7 +73,7 @@ public class Priority_Scheduler extends Scheduler {
 			if(override(cBest, p))
 				cBest = p;
 		}
-		//////System.out.println(.*);
+		
 		iteration++;
 		return cBest;
 	}
