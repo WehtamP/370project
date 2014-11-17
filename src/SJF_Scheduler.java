@@ -12,6 +12,10 @@ public class SJF_Scheduler extends Scheduler {
 	//is more suited to be the next process to execute.
 	Boolean override(Process p1, Process p2){
 		
+		//MG: If nothing has been selected yet, default to the applicable competitor
+				if(p1 == null)
+					return true;
+		
 		//MG: If the current process is active, don't overwrite it.
 		if(p1.getSTATE() == PROCESS_STATE.ACTIVE_CPU)
 			return false;
@@ -31,9 +35,7 @@ public class SJF_Scheduler extends Scheduler {
 			return false;
 		}
 			
-		//MG: If nothing has been selected yet, default to the applicable competitor
-		if(p1 == null)
-			return true;
+		
 					
 		//MG: Choose the one with a lower positive CPU_BURST
 		if(p1.getCPU_BURST() < p2.getCPU_BURST() && p1.getCPU_BURST() > 0){
