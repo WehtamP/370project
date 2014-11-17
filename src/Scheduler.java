@@ -36,16 +36,19 @@ public abstract class Scheduler {
 		//MP: Prepare for next cycle
 		cleanIO();
 		cleanProcessor(); 
-				
+		System.out.println("===================================");
 		Process temp = getCurrentProcess();
 		if(temp != null)
 			lastExecutedProcess = temp;
 		for( Process p: processes ){
 			p.act();
+			Methods.printProcessInfo(p);
 		}
 		for( Process p: IO ){
 			p.act();
+			Methods.printProcessInfo(p);
 		}
+		System.out.println("===================================");
 
 		if( lastExecutedProcess == null ) //MP: If no process executed, unutilized cycle counter incremented
 			unutilizedCycles++;

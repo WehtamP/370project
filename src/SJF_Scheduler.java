@@ -3,7 +3,7 @@ import java.util.LinkedList;
 
 public class SJF_Scheduler extends Scheduler {
 	
-	
+	int iteration;
 	SJF_Scheduler(Process arr[]){
 		super(new LinkedList<Process>(), arr);
 	}
@@ -11,6 +11,12 @@ public class SJF_Scheduler extends Scheduler {
 	//MG: Given the current best process and another process, determine whether the new process
 	//is more suited to be the next process to execute.
 	Boolean override(Process p1, Process p2){
+		
+		//MG: Ensures nothing 0/negative goes through
+		if(p2.getCPU_BURST() <= 0){
+			p2.setSTATE(PROCESS_STATE.FINISHED);
+			return false;
+		}
 		
 		//MG: If nothing has been selected yet, default to the applicable competitor
 				if(p1 == null)
@@ -26,15 +32,8 @@ public class SJF_Scheduler extends Scheduler {
 		
 		//MG: Blocks anything with a CPU Burst of 0 or lower
 		if(p2.getSTATE() == PROCESS_STATE.FINISHED){
-			processes.remove(p2);
 			return false;
 		}
-		if(p2.getCPU_BURST() <= 0){
-			p2.setSTATE(PROCESS_STATE.FINISHED);
-			processes.remove(p2);
-			return false;
-		}
-			
 		
 					
 		//MG: Choose the one with a lower positive CPU_BURST
@@ -60,6 +59,8 @@ public class SJF_Scheduler extends Scheduler {
 			if(override(cBest, p))
 				cBest = p;
 		}
+		System.out.println("Choosing for iteration # " + iteration);
+		iteration++;
 		return cBest;
 	}
 
