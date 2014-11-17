@@ -14,18 +14,18 @@ public class SJR_Scheduler extends Scheduler {
 		
 		//MG: Ensures nothing 0/negative goes through
 		if(p2.getCPU_BURST() <= 0){
-			System.out.println("2 was done");
+			//////System.out.println(.*);
 			p2.setSTATE(PROCESS_STATE.FINISHED);
 			return false;
 		}
 		
 		//MG: If nothing has been selected yet, default to the applicable competitor
 				if(p1 == null){
-					System.out.println("1 was null");
+					//////System.out.println(.*);
 					return true;
 				}
 		
-				System.out.println("Comparing " + p1.getP_ID() + " & " + p2.getP_ID());
+				//////System.out.println(.*);
 				
 		
 		//MG: Blocks anything with a CPU Burst of 0 or lower
@@ -36,30 +36,30 @@ public class SJR_Scheduler extends Scheduler {
 					
 		//MG: Choose the one with a lower positive CPU_BURST
 		if(p1.getCPU_BURST() < p2.getCPU_BURST() && p1.getCPU_BURST() > 0){
-			System.out.println("1 was lower");
+			//////System.out.println(.*);
 			return false;
 		}
 		else if(p1.getCPU_BURST() > p2.getCPU_BURST() && p2.getCPU_BURST() > 0){
-			System.out.println("2 was lower");
+			//////System.out.println(.*);
 			return true;
 		}
 		
 		//MG: If the current process is active, don't overwrite it.
 		if(p1.getSTATE() == PROCESS_STATE.ACTIVE_CPU){
-			System.out.println("1 was active");
+			//////System.out.println(.*);
 			return false;
 		}
 		
 		//MG: If p2 is active, choose it.
 		if(p2.getSTATE() == PROCESS_STATE.ACTIVE_CPU){
-			System.out.println("2 was active");
+			//////System.out.println(.*);
 			return true;
 		}
 		
 		else {
 			
 			//MG: Bakery choice
-			System.out.println("bakery");
+			//////System.out.println(.*);
 			return (p1.getP_ID() > p2.getP_ID());
 		}
 	}
@@ -73,7 +73,7 @@ public class SJR_Scheduler extends Scheduler {
 			if(override(cBest, p))
 				cBest = p;
 		}
-		System.out.println("Choosing for iteration # " + iteration);
+		//////System.out.println(.*);
 		iteration++;
 		return cBest;
 	}
