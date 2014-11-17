@@ -24,8 +24,10 @@ public class RankingGenerator
 	public void print()
 	{
 		printTitleBar();
+		
 		generateNormalRankings();
 		printNormalRankings();
+		
 		printRealtimeRankings();
 	}
 	
@@ -76,6 +78,11 @@ public class RankingGenerator
 				}
 			}
 		}
+	}
+	
+	private void generateRealtimeRankings()
+	{
+		
 	}
 	
 	//MP: Method to print the realtime schedulers' rankings

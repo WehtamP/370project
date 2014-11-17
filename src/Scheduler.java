@@ -36,19 +36,16 @@ public abstract class Scheduler {
 		//MP: Prepare for next cycle
 		cleanIO();
 		cleanProcessor(); 
-		System.out.println("===================================");
+				
 		Process temp = getCurrentProcess();
 		if(temp != null)
 			lastExecutedProcess = temp;
 		for( Process p: processes ){
 			p.act();
-			Methods.printProcessInfo(p);
 		}
 		for( Process p: IO ){
 			p.act();
-			Methods.printProcessInfo(p);
 		}
-		System.out.println("===================================");
 
 		if( lastExecutedProcess == null ) //MP: If no process executed, unutilized cycle counter incremented
 			unutilizedCycles++;
@@ -59,15 +56,22 @@ public abstract class Scheduler {
 	//MP: Checks to see if any processes are finished, sets their state to finished
 	protected void setFinished()
 	{
+		Process finishedProcess = null; //MP: Container for finished process
+		
 		for( Process p: processes )
 		{
 			if( p != null )
 			{
-				if( p.getCPU_BURST() == 0 )
+				if( p.getCPU_BURST() == 0 ) //MP: If found finished process, set variables accordingly.
+				{
 					p.setSTATE( PROCESS_STATE.FINISHED );
-
+					finishedProcess = p;
+				}
 			}
 		}
+		
+		if( finishedProcess != null ) //MP: Remove finishedprocess from the list of active processes.
+			processes.remove( finishedProcess );
 	}
 	
 	//MP: Function that cleans all processes that are not on the CPU by correcting their states.
@@ -82,8 +86,6 @@ public abstract class Scheduler {
 				processes.add( p );
 			}
 		}
-		
-		
 	}
 	
 	//MP: Function that cleans the processor, mostly by putting a new process on if necessary
@@ -150,6 +152,13 @@ public abstract class Scheduler {
 		}
 		
 		return true;
+	}
+	
+	public void printSnapshot( int clock )
+	{
+		System.out.println( "==================================================" );
+		System.out.println( this.getName() + " Snapshot at Cycle " + clock );
+		
 	}
 	
 	//MP: Returns the average wait time
