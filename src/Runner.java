@@ -23,10 +23,10 @@ public class Runner
 		
 		//MP: Setup each individual simulation
 		simulations.add( new Simulation( FCFSsch ) );
-		//simulations.add( new Simulation( SJFsch ) );
-		//simulations.add( new Simulation( RRsch ) );
-		//simulations.add( new Simulation( SJRsch ) );
-		//simulations.add( new Simulation( PrioritySch ) );
+		simulations.add( new Simulation( SJFsch ) );
+		simulations.add( new Simulation( RRsch ) );
+		simulations.add( new Simulation( SJRsch ) );
+		simulations.add( new Simulation( PrioritySch ) );
 		
 		//MP: Run the simulations;
 		for( Simulation s: simulations )

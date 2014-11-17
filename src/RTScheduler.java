@@ -11,16 +11,17 @@ public abstract class RTScheduler extends Scheduler {
 		violations = 0;
 	}
 
-	
+
 	//MG: Violation checker. NOTE: MAKE SURE TO RUN THIS AFTER ACTING BUT BEFORE REMOVING FINISHED PROCESSES
 	protected void updateViolations(){
-		for(Process p:processes){
-			if(p.getPERIOD() == -1) //Hits -1 exactly one time per violation
+		Process lp = getLastProcess();
+		if(lp != null){
+			if(lp.getPERIOD() == -1)
 				violations++;
-			
 		}
-		if(processor.getPERIOD() == -1)
-			violations++;
+		for(Process p:readyQueue){
+			if(p.getPERIOD() == -1)
+				violations++;
+		}
 	}
-
 }

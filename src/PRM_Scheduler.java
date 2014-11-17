@@ -62,10 +62,10 @@ public class PRM_Scheduler extends RTScheduler {
 
 	@Override
 	protected Process chooseNext() {
-		Process cBest = null;
+		Process cBest = processor;
 		//MG: Compares elements to find the process with the lowest time,
 		//favoring the currently active process and adhering to the bakery algorithm
-		for(Process p:processes){
+		for(Process p:readyQueue){
 			if(override(cBest, p))
 				cBest = p;
 		}
