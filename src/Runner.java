@@ -4,12 +4,7 @@ import java.util.LinkedList;
 public class Runner 
 {
 	public static void main( String[] args ) throws IOException
-	{
-		//"Enumeration" for simulation indices
-		int FCFS, RR;
-		FCFS = 0;
-		RR = 1;
-		
+	{		
 		if( args.length != 2 ) //MP: Ensure arguments provided are valid
 		{
 			System.out.println( "Warning, you are using the simulation incorrectly.");
@@ -21,16 +16,19 @@ public class Runner
 		
 		//MP: Setup each individual Scheduler
 		FCFS_Scheduler FCFSsch = new FCFS_Scheduler( processes );
+		SJF_Scheduler SJFsch = new SJF_Scheduler( processes );
 		RR_Scheduler RRsch = new RR_Scheduler( processes, InputProcessing.getQuantum() );
 		
 		//MP: Setup each individual simulation
 		simulations.add( new Simulation( FCFSsch ) );
+		simulations.add( new Simulation( SJFsch ) );
 		simulations.add( new Simulation( RRsch ) );
 		
 		//MP: Run the simulations;
 		for( Simulation s: simulations )
 			s.run();
 		
+		System.out.println( "HERE" );
 		//MP: Generate the logs
 		for( Simulation s: simulations )
 			s.generateLog();

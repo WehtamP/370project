@@ -36,9 +36,7 @@ public abstract class Scheduler {
 		//MP: Prepare for next cycle
 		cleanIO();
 		cleanProcessor(); 
-		
-		System.out.println("====================");
-		
+				
 		Process temp = getCurrentProcess();
 		if(temp != null)
 			lastExecutedProcess = temp;
