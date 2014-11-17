@@ -70,7 +70,7 @@ public abstract class Scheduler {
 			}
 		}
 		
-		if( finishedProcess != null ) //MP: Remove finishedprocess from the list of active processes.
+		if( finishedProcess != null ) //MP: Remove finished process from the list of active processes.
 			processes.remove( finishedProcess );
 	}
 	
@@ -158,7 +158,6 @@ public abstract class Scheduler {
 	{
 		System.out.println( "==================================================" );
 		System.out.println( this.getName() + " Snapshot at Cycle " + clock );
-		
 	}
 	
 	//MP: Returns the average wait time

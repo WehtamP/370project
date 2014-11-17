@@ -21,7 +21,7 @@ public class Methods
 		a.addLast( a.get( src2 ) );
 		a.addLast( a.get( src1 ) );
 		
-		a.set( src2,  a.remove() );
-		a.set( src1, a.remove() );
+		a.set( src2,  a.removeLast() );
+		a.set( src1, a.removeLast() );
 	}
 }
