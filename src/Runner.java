@@ -30,7 +30,6 @@ public class Runner
 		for( Simulation s: simulations )
 			s.run();
 		
-		System.out.println( "HERE" );
 		//MP: Generate the logs
 		for( Simulation s: simulations )
 			s.generateLog();

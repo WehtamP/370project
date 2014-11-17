@@ -14,9 +14,7 @@ public class RankingGenerator
 			if( s.getSimulationType() == Sim_Type.Realtime )
 				;
 			else
-				nSimulations.add( s );
-				
-				
+				nSimulations.add( s );	
 		}
 	}
 	
