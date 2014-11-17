@@ -4,7 +4,8 @@ import java.util.LinkedList;
 public abstract class Scheduler {
 	
 	protected Process[] originalProcessList;
-	protected Collection<Process> processes;
+	protected Collection<Process> readyQueue;
+	protected Process processor; //MP: Process that stores the process on the processor
 	protected int unutilizedCycles;
 	protected Process lastExecutedProcess;
 	protected LinkedList< Process > IO;
@@ -15,6 +16,7 @@ public abstract class Scheduler {
 	public Scheduler( Collection<Process> eColl, Process procs[] )
 	{
 		unutilizedCycles = 0;
+		processor = null;
 		IO = new LinkedList< Process >();
 		originalProcessList = new Process[ procs.length ];
 		
@@ -22,10 +24,10 @@ public abstract class Scheduler {
 		for( int i = 0; i < procs.length; i++ )
 			originalProcessList[ i ] = new Process( procs[ i ] );
 		
-		processes = eColl;
+		readyQueue = eColl;
 		
 		for(Process p: originalProcessList ){ //MP: Loop adds processes in procs to the collection processes
-			processes.add(p);
+			readyQueue.add(p);
 		}
 	}
 	
@@ -37,100 +39,88 @@ public abstract class Scheduler {
 		cleanIO();
 		cleanProcessor(); 
 				
-		Process temp = getCurrentProcess();
-		if(temp != null)
-			lastExecutedProcess = temp;
+		if(processor != null)
+			lastExecutedProcess = processor;
 		
-		for( Process p: processes )
+		if( processor != null )
+			processor.act();
+		
+		for( Process p: readyQueue )
 			p.act();
 		
 		for( Process p: IO )
 			p.act();
 
-		if( temp == null ) //MP: If no process executed, unutilized cycle counter incremented
+		if( processor == null ) //MP: If no process executed, unutilized cycle counter incremented
 			unutilizedCycles++;
 		
 		setFinished(); //MP: Check to see if any processes are finished
 	}
 	
-	//MP: Checks to see if any processes are finished, sets their state to finished
+	//MP: Checks to see if any the processor process is finished.
 	protected void setFinished()
 	{
-		Process finishedProcess = null; //MP: Container for finished process
-		
-		for( Process p: processes )
-		{
-			if( p != null )
+		if( processor != null )
+			if( processor.getCPU_BURST() == 0 )
 			{
-				if( p.getCPU_BURST() == 0 ) //MP: If found finished process, set variables accordingly.
-				{
-					p.setSTATE( PROCESS_STATE.FINISHED );
-					finishedProcess = p;
-				}
+				processor.setSTATE( PROCESS_STATE.FINISHED );
+				processor = null;
 			}
-		}
-		
-		if( finishedProcess != null ) //MP: Remove finished process from the list of active processes.
-			processes.remove( finishedProcess );
 	}
 	
 	//MP: Function that cleans all processes that are not on the CPU by correcting their states.
 	protected void cleanIO()
 	{
+		LinkedList< Process > list = new LinkedList< Process >();
 		for( Process p: IO )
 		{
 			if( p.getIO_BURST() <= 0 ) //MP: If done with IO Burst, start waiting for CPU
 			{
 				p.setSTATE( PROCESS_STATE.WAITING_CPU );
-				IO.remove( p );
-				processes.add( p );
+				list.add( p ); //MP: Add to temp list to prevent concurrent list modification errors
 			}
+		}
+		
+		for( Process p: list ) //MP: Properly remove from IO and add to process list processes that finished their IO Burst
+		{
+			IO.remove( p );
+			readyQueue.add( p );
 		}
 	}
 	
 	//MP: Function that cleans the processor, mostly by putting a new process on if necessary
 	protected void cleanProcessor()
 	{
-		Process p = getCurrentProcess();
-		
-		if( p != null )
+		if( processor != null )
 		{
-			if( p.getIO_START() == 0 ) //MP: If the process is ready for IO Burst, send to IO.
+			if( processor.getIO_START() == 0 ) //MP: If the process is ready for IO Burst, send to IO.
 			{
-				p.setSTATE( PROCESS_STATE.ACTIVE_IO );
-				processes.remove( p );
-				IO.add( p );
+				processor.setSTATE( PROCESS_STATE.ACTIVE_IO );
+				IO.add( processor );
+				processor = null;
 			}
 		}
 		
-		Process currentProcess = getCurrentProcess();
 		Process nextProcess = chooseNext(); //MP: chooseNext() is abstract method that varies by type of scheduler
 
-		if( currentProcess == nextProcess ) //MP: If chooseNext() says process shouldn't change, do nothing
+		if( processor == nextProcess ) //MP: If chooseNext() says process shouldn't change, do nothing
 			return;
 		
-		else if( currentProcess != null ) //MP: If a different process is chosen, make the current process wait.
-			currentProcess.setSTATE( PROCESS_STATE.WAITING_CPU );
-		
-		nextProcess.setSTATE( PROCESS_STATE.ACTIVE_CPU ); //MP: Put the next process on the CPU
-	}
-	
-	//MP: Returns the current process on the CPU
-	protected Process getCurrentProcess()
-	{
-		for( Process p: processes )
+		else if( processor != null ) //MP: If a different process is chosen, make the current process wait and add to ready queue
 		{
-			if( p.getSTATE() == PROCESS_STATE.ACTIVE_CPU )
-				return p;
+			processor.setSTATE( PROCESS_STATE.WAITING_CPU );
+			readyQueue.add( processor );
 		}
 		
-		return null;
+		nextProcess.setSTATE( PROCESS_STATE.ACTIVE_CPU ); //MP: Put the next process on the CPU
+		readyQueue.remove( nextProcess ); //MP: Remove new process from ready queue
+		processor = nextProcess;
 	}
 	
 	//MP: Prints the ready queue
 	public void printReadyQueue()
 	{
-		for( Process p: processes )
+		for( Process p: readyQueue )
 		{
 			Methods.printProcessInfo( p );
 		}
@@ -139,7 +129,10 @@ public abstract class Scheduler {
 	//MP: Checks to see if all processes have finished executing, if yes, finished = true
 	public boolean isFinished()
 	{		
-		for( Process p: processes )
+		if( processor != null )
+			return false;
+		
+		for( Process p: readyQueue )
 		{
 			if( p.getSTATE() != PROCESS_STATE.FINISHED )
 				return false;
@@ -154,10 +147,23 @@ public abstract class Scheduler {
 		return true;
 	}
 	
+	//MP: Prints a snapshot of what's currently in the CPU
 	public void printSnapshot( int clock )
-	{
+	{		
 		System.out.println( "==================================================" );
 		System.out.println( this.getName() + " Snapshot at Cycle " + clock );
+		
+		if( processor != null )
+			System.out.println( "\nProcess Currently Processing: " + processor.getP_ID() );
+		else
+			System.out.println( "\nProcess Currently Processing: " + "None" );
+		
+		System.out.println( "\nProcesses in Ready Queue");
+		
+		for( Process pr: readyQueue )
+		{
+			System.out.println( ">" + pr.getP_ID() );
+		}
 	}
 	
 	//MP: Returns the average wait time

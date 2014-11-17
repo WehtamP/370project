@@ -27,8 +27,10 @@ public class Simulation
 			SCHEDULER.act( CLOCK );
 			Process p = SCHEDULER.getLastProcess();
 			
-			if( !p.equals( EXECUTION_LIST.getLast())  && (p != null )) //MP: If the process on the CPU is not the same as the last process that was on the CPU, add to list.
+			if( (p != null ) && !p.equals( EXECUTION_LIST.getLast())) //MP: If the process on the CPU is not the same as the last process that was on the CPU, add to list.
 				EXECUTION_LIST.add( p );
+			
+			//SCHEDULER.printSnapshot( CLOCK );
 		}
 		
 		calcValues();

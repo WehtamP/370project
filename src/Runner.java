@@ -19,16 +19,19 @@ public class Runner
 		SJF_Scheduler SJFsch = new SJF_Scheduler( processes );
 		RR_Scheduler RRsch = new RR_Scheduler( processes, InputProcessing.getQuantum() );
 		SJR_Scheduler SJRsch = new SJR_Scheduler( processes );
+		Priority_Scheduler PrioritySch = new Priority_Scheduler( processes );
 		
 		//MP: Setup each individual simulation
 		simulations.add( new Simulation( FCFSsch ) );
-		simulations.add( new Simulation( SJFsch ) );
-		simulations.add( new Simulation( RRsch ) );
-		simulations.add( new Simulation( SJRsch ) );
+		//simulations.add( new Simulation( SJFsch ) );
+		//simulations.add( new Simulation( RRsch ) );
+		//simulations.add( new Simulation( SJRsch ) );
+		//simulations.add( new Simulation( PrioritySch ) );
 		
 		//MP: Run the simulations;
 		for( Simulation s: simulations )
 			s.run();
+		
 		
 		//MP: Generate the logs
 		for( Simulation s: simulations )

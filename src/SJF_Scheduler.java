@@ -67,7 +67,7 @@ public class SJF_Scheduler extends Scheduler {
 		Process cBest = null;
 		//MG: Compares elements to find the process with the lowest time,
 		//favoring the currently active process and adhering to the bakery algorithm
-		for(Process p:processes){
+		for(Process p:readyQueue){
 			if(override(cBest, p))
 				cBest = p;
 		}
