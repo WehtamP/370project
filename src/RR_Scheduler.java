@@ -28,6 +28,7 @@ public class RR_Scheduler extends Scheduler
 			}
 			else{
 				qctr = quantum;
+				qctr--;
 			}return q.peek();
 		}
 		else{
@@ -37,12 +38,15 @@ public class RR_Scheduler extends Scheduler
 				q.remove();
 			}
 			if(q.peek().getSTATE() == PROCESS_STATE.WAITING_CPU){
+				qctr--;
 				return q.peek();
 			}
 			for(int i = 0; i < q.size(); i++){
 				q.add(q.remove());
-				if(q.peek().getSTATE() == PROCESS_STATE.WAITING_CPU)					
+				if(q.peek().getSTATE() == PROCESS_STATE.WAITING_CPU){
+					qctr--;
 					return q.peek();
+				}
 			}
 		}
 		return null;
