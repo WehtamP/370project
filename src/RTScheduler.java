@@ -16,11 +16,11 @@ public abstract class RTScheduler extends Scheduler {
 	protected void updateViolations(){
 		Process lp = getLastProcess();
 		if(lp != null){
-			if(lp.getPERIOD() == -1)
+			if(lp.getPERIOD() == 0)
 				violations++;
 		}
 		for(Process p:readyQueue){
-			if(p.getPERIOD() == -1)
+			if(p.getPERIOD() == 0)
 				violations++;
 		}
 	}

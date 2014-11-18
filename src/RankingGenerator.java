@@ -9,10 +9,11 @@ public class RankingGenerator
 	public RankingGenerator( LinkedList< Simulation > sims )
 	{
 		nSimulations = new LinkedList< Simulation >();
+		rSimulations = new LinkedList< Simulation >();
 		for( Simulation s: sims )
 		{
 			if( s.getSimulationType() == Sim_Type.Realtime )
-				;
+				rSimulations.add(s);
 			else
 				nSimulations.add( s );	
 		}
@@ -98,8 +99,13 @@ public class RankingGenerator
 	
 	//MP: Method to print the realtime schedulers' rankings
 	private void printRealtimeRankings()
-	{
+	{	
+		System.out.println( "Real-time Schedulers" );
 		
+		for( int i = 0; i < rSimulations.size(); i++ )
+		{
+			System.out.println( i + ". " + rSimulations.get( i ).getSchedulerName() );
+		}
 	}
 	
 	//MP: Method to print the title bar

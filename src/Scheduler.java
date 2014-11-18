@@ -180,7 +180,7 @@ public abstract class Scheduler {
 		exists = false;
 		for( Process pr: IO ) //MP: Print IO
 		{
-			System.out.println( ">" + pr.getP_ID() + " (CPU Burst - " + pr.getCPU_BURST() + "\tIO Burst - " + pr.getIO_BURST() + ")" );
+			System.out.println( ">" + pr.getP_ID() + " (CPU Burst - " + pr.getCPU_BURST() + "\tIO Burst - " + pr.getIO_BURST() + "\tPERIOD - " + pr.getPERIOD() + ")" );
 			exists = true;
 		}
 		

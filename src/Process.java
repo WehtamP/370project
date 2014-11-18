@@ -22,6 +22,7 @@ public class Process
 		PRIORITY = arr[ 3 ];
 		PERIOD = arr[ 4 ];
 		initP = PERIOD;
+		System.out.println("initP = " + initP);
 		IO_START = CPU_BURST / 2; //MP: IO bursts start after 1/2 CPU burst done.
 		
 		if( IO_BURST == 0 ) //MP: If no IO_BURST, set IO_START to -1
@@ -120,12 +121,15 @@ public class Process
 		if( STATE == PROCESS_STATE.ACTIVE_IO ) //MP: If Process is active in IO, the IO burst time decreases.
 		{
 			IO_BURST--;
+			System.out.println("initP = " + initP);
 			PERIOD = initP;
 		}
 		
 		if( STATE == PROCESS_STATE.WAITING_CPU ) //MP: If the process is waiting for the CPU, its total wait time increases.
+			{
 			WAIT_TIME++;
 			PERIOD--;
+			}
 
 	}	
 }
