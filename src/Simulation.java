@@ -6,7 +6,7 @@ public class Simulation
 	private double THROUGHPUT;
 	private int TURNAROUND_TIME;
 	private int CLOCK;
-	private float AVERAGE_WAIT_TIME;
+	private double AVERAGE_WAIT_TIME;
 	private double CPU_UTILIZATION;
 	private LinkedList<Process> EXECUTION_LIST;
 	
@@ -24,10 +24,10 @@ public class Simulation
 		while( !SCHEDULER.isFinished() ) //MP: Run simulation until all processes are finished
 		{
 			CLOCK++;
-			SCHEDULER.act( CLOCK );
+			SCHEDULER.act();
 			Process p = SCHEDULER.getLastProcess();
 			
-			if( (p != null ) && !p.equals( EXECUTION_LIST.getLast())) //MP: If the process on the CPU is not the same as the last process that was on the CPU, add to list.
+			if( EXECUTION_LIST.getLast() != p) //MP: If the process on the CPU is not the same as the last process that was on the CPU, add to list.
 				EXECUTION_LIST.add( p );
 			
 			SCHEDULER.printSnapshot( CLOCK );
@@ -38,10 +38,11 @@ public class Simulation
 	
 	private void calcValues() //MP: Calculates statistics after running, should be self explanatory
 	{
-
-		THROUGHPUT = SCHEDULER.getNumProcesses() / ( double )CLOCK;
-		AVERAGE_WAIT_TIME = Math.round( SCHEDULER.getAverageWaitTime() * 100 ) / (float )100;
-		CPU_UTILIZATION = ( CLOCK - SCHEDULER.getUnutilizedCycles() ) / ( float )CLOCK;
+		int totalCycles = CLOCK + 1;
+		TURNAROUND_TIME = totalCycles;
+		THROUGHPUT = SCHEDULER.getNumProcesses() / ( double )( totalCycles );
+		AVERAGE_WAIT_TIME = Math.round( SCHEDULER.getAverageWaitTime() * 100 ) / (double )100;
+		CPU_UTILIZATION = ( totalCycles - SCHEDULER.getUnutilizedCycles()) / ( double )( totalCycles );
 		
 	}
 	
@@ -52,7 +53,7 @@ public class Simulation
 		System.out.println( "CPU execution order for " + SCHEDULER.getName() );
 		printExecutionOrder();
 		System.out.println( "Throughput for " + SCHEDULER.getName() + " = " + THROUGHPUT);
-		System.out.println( "Total Turn-around Time for " + SCHEDULER.getName() + " = " + CLOCK );
+		System.out.println( "Total Turn-around Time for " + SCHEDULER.getName() + " = " + TURNAROUND_TIME );
 		System.out.println( "Average Wait Time for " + SCHEDULER.getName() + " = " + AVERAGE_WAIT_TIME );
 		System.out.println( "CPU Utilization for " + SCHEDULER.getName() + " = " + CPU_UTILIZATION * 100 + "%" );
 		System.out.println( "======================================================" );
@@ -79,11 +80,11 @@ public class Simulation
 		
 		System.out.print( "Done" );
 		
-		if( i != 1 )
+		if( i != 2 )
 			System.out.println();
 	}
 	
-	public float getAVERAGE_WAIT_TIME() //MP: Accessor for AVERAGE_WAIT_TIME
+	public double getAVERAGE_WAIT_TIME() //MP: Accessor for AVERAGE_WAIT_TIME
 	{
 		return AVERAGE_WAIT_TIME;
 	}

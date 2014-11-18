@@ -33,27 +33,25 @@ public abstract class Scheduler {
 
 
 	//MP: Method that causes all of the processes to act
-	public void act( int clock )
+	public void act()
 	{
 		//MP: Prepare for next cycle
 		cleanIO();
 		cleanProcessor(); 
 
-		if(processor != null)
-			lastExecutedProcess = processor;
+		lastExecutedProcess = processor;
 
 		if( processor != null )
 			processor.act();
+		else //MP: If no process executed, unutilized cycle counter incremented
+			unutilizedCycles++;
 
 		for( Process p: readyQueue )
 			p.act();
 
 		for( Process p: IO )
 			p.act();
-
-		if( processor == null ) //MP: If no process executed, unutilized cycle counter incremented
-			unutilizedCycles++;
-
+		
 		setFinished(); //MP: Check to see if any processes are finished
 	}
 
@@ -155,7 +153,8 @@ public abstract class Scheduler {
 
 	//MP: Prints a snapshot of what's currently in the CPU
 	public void printSnapshot( int clock )
-	{		
+	{	
+		boolean exists = false; //MP: Boolean used to determine when to print out none.
 		System.out.println( "==================================================" );
 		System.out.println( this.getName() + " Snapshot at Cycle " + clock );
 
@@ -169,7 +168,22 @@ public abstract class Scheduler {
 		for( Process pr: readyQueue )
 		{
 			System.out.println( ">" + pr.getP_ID() );
+			exists = true;
 		}
+		if( !exists )
+			System.out.println( "None" );
+		
+		System.out.println( "\nProcesses in IO" );
+		
+		exists = false;
+		for( Process pr: IO )
+		{
+			System.out.println( ">" + pr.getP_ID() );
+			exists = true;
+		}
+		
+		if( !exists )
+			System.out.println( "None" );
 	}
 
 	//MP: Returns the average wait time
@@ -177,10 +191,10 @@ public abstract class Scheduler {
 	{
 		float waitTime = 0;
 
-		for( Process p: originalProcessList )
-			waitTime += p.getWAIT_TIME() / ( float )this.getNumProcesses(); //MP: Self-explanatory calculation
+		for( Process p: originalProcessList ) //MP: Sum the wait times
+			waitTime += p.getWAIT_TIME();
 
-		return waitTime;
+		return waitTime / ( float )this.getNumProcesses(); //MP: Return the average
 	}
 
 	//MP: returns the original number of processes
