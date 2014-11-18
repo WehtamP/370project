@@ -11,6 +11,14 @@ public class SJR_Scheduler extends Scheduler {
 	//MG: Given the current best process and another process, determine whether the new process
 	//is more suited to be the next process to execute.
 	Boolean override(Process p1, Process p2){
+		if(p1 == null)
+			return true;
+		
+		if(p2 == null)
+			return false;
+		
+		
+		
 		
 		//MG: Ensures nothing 0/negative goes through
 		if(p2.getCPU_BURST() <= 0){
@@ -19,14 +27,7 @@ public class SJR_Scheduler extends Scheduler {
 			return false;
 		}
 		
-		//MG: If nothing has been selected yet, default to the applicable competitor
-				if(p1 == null){
-					
-					return true;
-				}
 		
-				
-				
 		
 		//MG: Blocks anything with a CPU Burst of 0 or lower
 		if(p2.getSTATE() == PROCESS_STATE.FINISHED){
@@ -50,11 +51,6 @@ public class SJR_Scheduler extends Scheduler {
 			return false;
 		}
 		
-		//MG: If p2 is active, choose it.
-		if(p2.getSTATE() == PROCESS_STATE.ACTIVE_CPU){
-			
-			return true;
-		}
 		
 		else {
 			
