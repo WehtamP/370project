@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 //MP: Class that deals with the text file or strings
-public class InputProcessing 
+public class Input_Processing 
 {
 	private static int quantum;
 	

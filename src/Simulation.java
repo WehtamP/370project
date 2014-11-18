@@ -1,9 +1,7 @@
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
 public class Simulation 
@@ -52,17 +50,7 @@ public class Simulation
 	
 	public void generateLog() throws IOException //MP: Prints out all of the data to the writer and then to the file, pretty self-explanatory
 	{
-		BufferedWriter writer;
-		writer = null;
-		
-		try 
-		{
-			writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( "FinalReport.dat", true ) ) );
-		} 
-		catch ( Exception e) {
-			System.out.println( "Error opening file" );
-			e.printStackTrace();
-		}
+		BufferedWriter writer = Static_Stuff.getReportWriter();
 		
 		writer.write( "\n======================================================" );
 		writer.write( "\nFinal Report for " + SCHEDULER.getName() );
@@ -77,7 +65,6 @@ public class Simulation
 			writer.write( "\nDeadline Violations for " + getSchedulerName() + " = " + ( (RT_Scheduler) SCHEDULER ).getNumViolations() );
 		
 		writer.write( "\n======================================================" );
-		writer.close();
 	}
 	
 	//MP: Prints out the execution order of the processes. Used in generateLog()

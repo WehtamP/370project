@@ -1,12 +1,14 @@
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.LinkedList;
 
-public class RankingGenerator
+public class Ranking_Generator
 {
 	private LinkedList< Simulation > nSimulations; //MP: normal simulations
 	private LinkedList< Simulation > rSimulations; //MP: realtime simulations
 	
 	//MP: Constructor, takes linked list of all simulations
-	public RankingGenerator( LinkedList< Simulation > sims )
+	public Ranking_Generator( LinkedList< Simulation > sims )
 	{
 		nSimulations = new LinkedList< Simulation >();
 		rSimulations = new LinkedList< Simulation >();
@@ -20,24 +22,26 @@ public class RankingGenerator
 	}
 	
 	//MP: Method to print all of the rankings
-	public void print()
+	public void print() throws IOException
 	{
-		printTitleBar();
+		BufferedWriter writer = Static_Stuff.getReportWriter();
+		printTitleBar( writer );
 		
 		generateNormalRankings();
-		printNormalRankings();
+		printNormalRankings( writer );
 		
-		printRealtimeRankings();
+		printRealtimeRankings( writer );
 	}
 	
 	//MP: Method to print the rankings of non-realtime schedulers
-	private void printNormalRankings()
+	private void printNormalRankings( BufferedWriter writer ) throws IOException
 	{	
-		System.out.println( "Standard Schedulers" );
+		writer.write( "Standard Schedulers" );
 		
 		for( int i = 0; i < nSimulations.size(); i++ )
 		{
-			System.out.println( i + ". " + nSimulations.get( i ).getSchedulerName() );
+			writer.write( "\n" );
+			writer.write( i + ". " + nSimulations.get( i ).getSchedulerName() );
 		}
 	}
 	
@@ -56,7 +60,7 @@ public class RankingGenerator
 				if( compareNormal( nSimulations.get( i - 1 ), nSimulations.get( i ) ) )
 				{
 					finished = false;
-					StaticStuff.swap( nSimulations, i - 1, i );
+					Static_Stuff.swap( nSimulations, i - 1, i );
 				}
 			}
 		}
@@ -98,22 +102,22 @@ public class RankingGenerator
 	}
 	
 	//MP: Method to print the realtime schedulers' rankings
-	private void printRealtimeRankings()
+	private void printRealtimeRankings( BufferedWriter writer ) throws IOException
 	{	
-		System.out.println( "Real-time Schedulers" );
+		writer.write( "\n\nReal-time Schedulers\n" );
 		
 		for( int i = 0; i < rSimulations.size(); i++ )
 		{
-			System.out.println( i + ". " + rSimulations.get( i ).getSchedulerName() );
+			writer.write( i + ". " + rSimulations.get( i ).getSchedulerName() + "\n" );
 		}
 	}
 	
 	//MP: Method to print the title bar
-	private void printTitleBar()
+	private void printTitleBar( BufferedWriter writer ) throws IOException
 	{
-		System.out.println();
-		System.out.println( "======================================================");
-		System.out.println( "            Scheduling Algorithm Placement            " );
-		System.out.println( "======================================================" );
+		writer.write( "\n" );
+		writer.write( "======================================================\n");
+		writer.write( "            Scheduling Algorithm Placement            \n" );
+		writer.write( "======================================================\n" );
 	}
 }

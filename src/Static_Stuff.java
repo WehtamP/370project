@@ -1,11 +1,14 @@
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.File;
 import java.util.LinkedList;
 
-public class StaticStuff 
+public class Static_Stuff 
 {
-	public static PrintWriter snapshotWriter;
+	public static BufferedWriter reportWriter, snapshotWriter;
 	private static int snapshotDensity;
 	
 	//MP: Creates the files to be written to, empties them if they already exist.
@@ -35,6 +38,40 @@ public class StaticStuff
 		}
 	}
 	
+	//MP: Accessor for reportWriter
+	public static BufferedWriter getReportWriter()
+	{
+		return reportWriter;
+	}
+	
+	//MP: Accessor for snapshotWriter
+	public static BufferedWriter getSnapshotWriter()
+	{
+		return snapshotWriter;
+	}
+	
+	//MP: Initializes both the report writer and the snapshot writer
+	public static void initWriters()
+	{	
+		try 
+		{
+			reportWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( "FinalReport.dat", true ) ) ); //MP: true means open in append mode
+			snapshotWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( "snapshot.dat", true ) ) );
+		} 
+		catch ( Exception e) 
+		{
+			System.out.println( "Error opening file" );
+			e.printStackTrace();
+		}
+	}
+	
+	//MP: Function to close the writers once writing is done.
+	public static void closeWriters() throws IOException
+	{
+		reportWriter.close();
+		snapshotWriter.close();
+	}
+	
 	//MP: Function prints out all details of process provided by text file
 	public static void printProcessInfo( Process process1 )
 	{
@@ -56,20 +93,6 @@ public class StaticStuff
 		
 		a.set( src2,  a.removeLast() );
 		a.set( src1, a.removeLast() );
-	}
-	
-	//MP: Initializes the snapshot writer
-	public void initWriter()
-	{
-		try
-		{
-			snapshotWriter = new PrintWriter( "snapshot.dat", "UTF-8" );
-		}
-		catch( Exception e )
-		{
-			System.out.println( "An error has occurred" );
-			e.printStackTrace();
-		}
 	}
 	
 	//MP: Mutator for snapshot density

@@ -40,7 +40,7 @@ public abstract class Scheduler {
 		cleanIO();
 
 		lastExecutedProcess = processor;
-		if( ( clock ) % StaticStuff.getSnapshotDensity() == 0 )
+		if( ( clock ) % Static_Stuff.getSnapshotDensity() == 0 )
 			printSnapshot( clock );
 
 		if( processor != null )
@@ -128,7 +128,7 @@ public abstract class Scheduler {
 	{
 		for( Process p: readyQueue )
 		{
-			StaticStuff.printProcessInfo( p );
+			Static_Stuff.printProcessInfo( p );
 		}
 	}
 

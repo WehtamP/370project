@@ -14,26 +14,26 @@ public class Runner
 		{	
 			try
 			{
-				StaticStuff.setSnapshotDensity( Integer.parseInt( args[ 1 ] ) );
+				Static_Stuff.setSnapshotDensity( Integer.parseInt( args[ 1 ] ) );
 			}
 			
 			catch( Exception e )
 			{
 				System.out.println( "Your second argument is invalid, defaulting to 10 for snapshot density" );
-				StaticStuff.setSnapshotDensity( 10 );
+				Static_Stuff.setSnapshotDensity( 10 );
 			}
 		}
 			
-		StaticStuff.setSnapshotDensity( 1 );
-		StaticStuff.initFiles();
+		Static_Stuff.initFiles();
+		Static_Stuff.initWriters();
 		
-		Process[] processes = InputProcessing.readFile( args[ 0 ] ); //MP: Gets array of processes from the text file
+		Process[] processes = Input_Processing.readFile( args[ 0 ] ); //MP: Gets array of processes from the text file
 		LinkedList< Simulation > simulations = new LinkedList< Simulation >();
 		
 		//MP: Setup each individual Scheduler
 		FCFS_Scheduler FCFSsch = new FCFS_Scheduler( processes );
 		SJF_Scheduler SJFsch = new SJF_Scheduler( processes );
-		RR_Scheduler RRsch = new RR_Scheduler( processes, InputProcessing.getQuantum() );
+		RR_Scheduler RRsch = new RR_Scheduler( processes, Input_Processing.getQuantum() );
 		SJR_Scheduler SJRsch = new SJR_Scheduler( processes );
 		Priority_Scheduler PrioritySch = new Priority_Scheduler( processes );
 		PRM_Scheduler PRMsch = new PRM_Scheduler( processes );
@@ -58,7 +58,9 @@ public class Runner
 			s.generateLog();
 		
 		//MP: Generate the rankings
-		RankingGenerator ranking = new RankingGenerator( simulations );
+		Ranking_Generator ranking = new Ranking_Generator( simulations );
 		ranking.print();
+		
+		Static_Stuff.closeWriters();
 	}
 }
