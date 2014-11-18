@@ -14,7 +14,7 @@ public class Simulation
 	public Simulation( Scheduler s )
 	{
 		SCHEDULER = s;
-		CLOCK = 0;
+		CLOCK = -1;
 		EXECUTION_LIST = new LinkedList< Process >();
 		EXECUTION_LIST.add( null ); //MP: Add null to the linked list so no errors occur when trying to remove element before any exist.
 	}
@@ -24,13 +24,11 @@ public class Simulation
 		while( !SCHEDULER.isFinished() ) //MP: Run simulation until all processes are finished
 		{
 			CLOCK++;
-			SCHEDULER.act();
+			SCHEDULER.act( CLOCK );
 			Process p = SCHEDULER.getLastProcess();
 			
 			if( EXECUTION_LIST.getLast() != p) //MP: If the process on the CPU is not the same as the last process that was on the CPU, add to list.
-				EXECUTION_LIST.add( p );
-			
-			SCHEDULER.printSnapshot( CLOCK );
+				EXECUTION_LIST.add( p );	
 		}
 		
 		calcValues();

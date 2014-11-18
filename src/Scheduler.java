@@ -33,13 +33,15 @@ public abstract class Scheduler {
 
 
 	//MP: Method that causes all of the processes to act
-	public void act()
+	public void act( int clock )
 	{
 		//MP: Prepare for next cycle
-		cleanIO();
 		cleanProcessor(); 
+		cleanIO();
 
 		lastExecutedProcess = processor;
+		if( ( clock ) % StaticStuff.getSnapshotDensity() == 0 )
+			printSnapshot( clock );
 
 		if( processor != null )
 			processor.act();
@@ -126,7 +128,7 @@ public abstract class Scheduler {
 	{
 		for( Process p: readyQueue )
 		{
-			Methods.printProcessInfo( p );
+			StaticStuff.printProcessInfo( p );
 		}
 	}
 
@@ -159,15 +161,15 @@ public abstract class Scheduler {
 		System.out.println( this.getName() + " Snapshot at Cycle " + clock );
 
 		if( processor != null )
-			System.out.println( "\nProcess Currently Processing: " + processor.getP_ID() );
+			System.out.println( "\nProcess Currently Processing: " + processor.getP_ID() + " (CPU Burst - " + processor.getCPU_BURST() + "\tIO Burst - " + processor.getIO_BURST() +")" );
 		else
 			System.out.println( "\nProcess Currently Processing: " + "None" );
 
 		System.out.println( "\nProcesses in Ready Queue");
 
-		for( Process pr: readyQueue )
+		for( Process pr: readyQueue ) //MP: Print ready queue
 		{
-			System.out.println( ">" + pr.getP_ID() );
+			System.out.println( ">" + pr.getP_ID() + " (CPU Burst - " + pr.getCPU_BURST() + "\tIO Burst - " + pr.getIO_BURST() + ")" );
 			exists = true;
 		}
 		if( !exists )
@@ -176,9 +178,9 @@ public abstract class Scheduler {
 		System.out.println( "\nProcesses in IO" );
 		
 		exists = false;
-		for( Process pr: IO )
+		for( Process pr: IO ) //MP: Print IO
 		{
-			System.out.println( ">" + pr.getP_ID() );
+			System.out.println( ">" + pr.getP_ID() + " (CPU Burst - " + pr.getCPU_BURST() + "\tIO Burst - " + pr.getIO_BURST() + ")" );
 			exists = true;
 		}
 		

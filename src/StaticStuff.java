@@ -1,7 +1,9 @@
 import java.util.LinkedList;
 
-public class Methods 
+public class StaticStuff 
 {
+	private static int snapshotDensity;
+	
 	//MP: Function prints out all details of process provided by text file
 	public static void printProcessInfo( Process process1 )
 	{
@@ -23,5 +25,16 @@ public class Methods
 		
 		a.set( src2,  a.removeLast() );
 		a.set( src1, a.removeLast() );
+	}
+	
+	//MP: Mutator for snapshot density
+	public static void setSnapshotDensity( int a )
+	{
+		snapshotDensity = a;
+	}
+	
+	public static int getSnapshotDensity()
+	{
+		return snapshotDensity;
 	}
 }
