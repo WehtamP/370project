@@ -108,6 +108,17 @@ public class Simulation
 		return TURNAROUND_TIME;
 	}
 	
+	public int getVIOLATIONS() //MG: Accessor for deadline violations
+	{
+		if(getSimulationType() == Sim_Type.Realtime){
+			return ((RT_Scheduler) SCHEDULER).getNumViolations();
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
 	//MP: Method to return the name of the scheduler being simulator
 	public String getSchedulerName()
 	{
