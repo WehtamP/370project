@@ -47,32 +47,45 @@ public class RankingGenerator
 		
 		while( !finished )
 		{
-			//MP: Bubble sort by CPU_UTILIZATION
+			//MP: Bubble sort by compareNormal()
 			for( int i = 1; i < nSimulations.size(); i++ )
 			{
 				finished = true;
 				
-				if( nSimulations.get( i ).getCPU_UTILIZATION() > nSimulations.get( i - 1 ).getCPU_UTILIZATION() )
+				if( compareNormal( nSimulations.get( i - 1 ), nSimulations.get( i ) ) )
 				{
 					finished = false;
-					Methods.swap( nSimulations, i - 1, i );
+					StaticStuff.swap( nSimulations, i - 1, i );
 				}
 			}
 		}
-		
-		finished = false;
-		while( !finished )
-		{	
-			//MP: Bubble sort of same CPU_UTILIZATION items by Average Wait Time
-			for( int i = 1; i < nSimulations.size(); i++ )
+	}
+	
+	//MP: method that returns false if s1 is better than s2, 1 otherwise
+	private boolean compareNormal( Simulation s1, Simulation s2 )
+	{
+		if( s1.getCPU_UTILIZATION() > s2.getCPU_UTILIZATION() ) //MP: Compare CPU Utilization
+			return false;
+		else if( s2.getCPU_UTILIZATION() > s1.getCPU_UTILIZATION() )
+			return true;
+		else //MP: If not different, compare avg wait time
+		{
+			if( s1.getAVERAGE_WAIT_TIME() > s2.getAVERAGE_WAIT_TIME() )
+				return false;
+			else if( s2.getAVERAGE_WAIT_TIME() > s1.getAVERAGE_WAIT_TIME() )
+				return true;
+			else //MP: if not different, compare throughput
 			{
-				finished = true;
-				
-				//MP: If average wait times differ, only swap if the two have the same CPU utilization
-				if( nSimulations.get( i ).getAVERAGE_WAIT_TIME() < nSimulations.get( i - 1 ).getAVERAGE_WAIT_TIME() && nSimulations.get( i ).getCPU_UTILIZATION() == nSimulations.get( i - 1 ).getCPU_UTILIZATION() )
+				if( s1.getTHROUGHPUT() > s2.getTHROUGHPUT() )
+					return false;
+				else if( s2.getTHROUGHPUT() > s1.getTHROUGHPUT() )
+					return true;
+				else //MP: if not different, compare turnaround times
 				{
-					finished = false;
-					Methods.swap( nSimulations, i - 1, i );
+					if( s1.getTURNAROUND_TIME() > s2.getTURNAROUND_TIME() )
+						return false;
+					else
+						return true;
 				}
 			}
 		}

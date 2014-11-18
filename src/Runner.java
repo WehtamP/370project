@@ -11,6 +11,8 @@ public class Runner
 			System.out.println( "Correct usage is \"simulation processfile.dat 10" );
 		}
 		
+		StaticStuff.setSnapshotDensity( 1 );
+		
 		Process[] processes = InputProcessing.readFile( "processList.dat" ); //MP: Gets array of processes from the text file
 		LinkedList< Simulation > simulations = new LinkedList< Simulation >();
 		
