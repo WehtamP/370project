@@ -10,10 +10,24 @@ public class Runner
 			System.out.println( "Warning, you are using the simulation incorrectly.");
 			System.out.println( "Correct usage is \"simulation processfile.dat 10" );
 		}
-		
+		else
+		{	
+			try
+			{
+				StaticStuff.setSnapshotDensity( Integer.parseInt( args[ 1 ] ) );
+			}
+			
+			catch( Exception e )
+			{
+				System.out.println( "Your second argument is invalid, defaulting to 10 for snapshot density" );
+				StaticStuff.setSnapshotDensity( 10 );
+			}
+		}
+			
 		StaticStuff.setSnapshotDensity( 1 );
+		StaticStuff.initFiles();
 		
-		Process[] processes = InputProcessing.readFile( "processList.dat" ); //MP: Gets array of processes from the text file
+		Process[] processes = InputProcessing.readFile( args[ 0 ] ); //MP: Gets array of processes from the text file
 		LinkedList< Simulation > simulations = new LinkedList< Simulation >();
 		
 		//MP: Setup each individual Scheduler

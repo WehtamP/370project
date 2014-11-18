@@ -39,8 +39,8 @@ public class InputProcessing
 		} 
 		catch ( FileNotFoundException e ) //MP: If no file present, print error message + stack trace
 		{
-			System.out.println( "The file does not exist. Printing stack trace." );
-			e.printStackTrace();
+			System.out.println( "The file (1st argument) does not exist\nEnding execution." );
+			System.exit( -1 );
 		}
 		
 		return null;

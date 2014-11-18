@@ -123,10 +123,9 @@ public class Process
 			PERIOD = initP;
 		}
 		
-		if( STATE == PROCESS_STATE.WAITING_CPU )//MP: If the process is waiting for the CPU, its total wait time increases.
-		{
+		if( STATE == PROCESS_STATE.WAITING_CPU ) //MP: If the process is waiting for the CPU, its total wait time increases.
 			WAIT_TIME++;
 			PERIOD--;
-		}
+
 	}	
 }

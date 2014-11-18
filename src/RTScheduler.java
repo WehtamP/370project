@@ -11,7 +11,12 @@ public abstract class RTScheduler extends Scheduler {
 		violations = 0;
 	}
 
-
+	@Override
+	public void act(int clock){
+		updateViolations();
+		super.act(clock);
+	}
+	
 	//MG: Violation checker. NOTE: MAKE SURE TO RUN THIS AFTER ACTING BUT BEFORE REMOVING FINISHED PROCESSES
 	protected void updateViolations(){
 		Process lp = getLastProcess();

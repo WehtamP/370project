@@ -1,3 +1,9 @@
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
 public class Simulation 
@@ -44,46 +50,56 @@ public class Simulation
 		
 	}
 	
-	public void generateLog() //MP: Prints out all of the data. NEEDS TO BE CHANGED TO TEXT FILE OUTPUT
+	public void generateLog() throws IOException //MP: Prints out all of the data to the writer and then to the file, pretty self-explanatory
 	{
-		System.out.println( "======================================================" );
-		System.out.println( "Final Report for " + SCHEDULER.getName() );
-		System.out.println( "CPU execution order for " + SCHEDULER.getName() );
-		printExecutionOrder();
-		System.out.println( "Throughput for " + SCHEDULER.getName() + " = " + THROUGHPUT);
-		System.out.println( "Total Turn-around Time for " + SCHEDULER.getName() + " = " + TURNAROUND_TIME );
-		System.out.println( "Average Wait Time for " + SCHEDULER.getName() + " = " + AVERAGE_WAIT_TIME );
-		System.out.println( "CPU Utilization for " + SCHEDULER.getName() + " = " + CPU_UTILIZATION * 100 + "%" );
+		BufferedWriter writer;
+		writer = null;
+		
+		try 
+		{
+			writer = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( "FinalReport.dat", true ) ) );
+		} 
+		catch ( Exception e) {
+			System.out.println( "Error opening file" );
+			e.printStackTrace();
+		}
+		
+		writer.write( "\n======================================================" );
+		writer.write( "\nFinal Report for " + SCHEDULER.getName() );
+		writer.write( "\nCPU execution order for " + SCHEDULER.getName() );
+		printExecutionOrder( writer );
+		writer.write( "\nThroughput for " + SCHEDULER.getName() + " = " + THROUGHPUT);
+		writer.write( "\nTotal Turn-around Time for " + SCHEDULER.getName() + " = " + TURNAROUND_TIME );
+		writer.write( "\nAverage Wait Time for " + SCHEDULER.getName() + " = " + AVERAGE_WAIT_TIME );
+		writer.write( "\nCPU Utilization for " + SCHEDULER.getName() + " = " + CPU_UTILIZATION * 100 + "%" );
 		
 		if( getSimulationType() == Sim_Type.Realtime )
-			System.out.println( "Deadline Violations for " + getSchedulerName() + " = " + ( (RTScheduler) SCHEDULER ).getNumViolations() );
+			writer.write( "\nDeadline Violations for " + getSchedulerName() + " = " + ( (RTScheduler) SCHEDULER ).getNumViolations() );
 		
-		System.out.println( "======================================================" );
+		writer.write( "\n======================================================" );
+		writer.close();
 	}
 	
 	//MP: Prints out the execution order of the processes. Used in generateLog()
-	public void printExecutionOrder()
+	public void printExecutionOrder( BufferedWriter writer ) throws IOException
 	{
 		int i = 0;
 		
 		//MP: Rather complicated text processing to make the output look like the sample output.
-		System.out.print( "\t" );
+		writer.write( "\n\t" );
 		
 		for( Process p: EXECUTION_LIST ) //MP: Execution list is linked list of processes executed in order.
 		{
 			if( p != null )
 			{
-				System.out.print( "PID " + p.getP_ID() + " >> " );
+				writer.write( "PID " + p.getP_ID() + " >> " );
 				i++;
 				if( ( i %= 6 ) == 0 )
-					System.out.print( "\n\t" );
+					writer.write( "\n\t" );
 			}
 		}	
 		
-		System.out.print( "Done" );
-		
-		if( i != 2 )
-			System.out.println();
+		writer.write( "Done" );
 	}
 	
 	public double getAVERAGE_WAIT_TIME() //MP: Accessor for AVERAGE_WAIT_TIME

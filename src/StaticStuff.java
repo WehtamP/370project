@@ -1,8 +1,39 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.File;
 import java.util.LinkedList;
 
 public class StaticStuff 
 {
+	public static PrintWriter snapshotWriter;
 	private static int snapshotDensity;
+	
+	//MP: Creates the files to be written to, empties them if they already exist.
+	public static void initFiles()
+	{
+		File snapshots = new File( "snapshot.dat" );
+		File finalReport = new File( "FinalReport.dat" );
+		
+		//MP: If snapshot.dat already exists, delete it.
+		if( snapshots.exists() )
+			snapshots.delete();
+		
+		//MP: If FinalReport.dat already exists, delete it.
+		if( finalReport.exists() )
+			finalReport.delete();
+		
+		//MP: Create both files.
+		try
+		{
+			snapshots.createNewFile();
+			finalReport.createNewFile();
+		}
+		
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
+	}
 	
 	//MP: Function prints out all details of process provided by text file
 	public static void printProcessInfo( Process process1 )
@@ -25,6 +56,20 @@ public class StaticStuff
 		
 		a.set( src2,  a.removeLast() );
 		a.set( src1, a.removeLast() );
+	}
+	
+	//MP: Initializes the snapshot writer
+	public void initWriter()
+	{
+		try
+		{
+			snapshotWriter = new PrintWriter( "snapshot.dat", "UTF-8" );
+		}
+		catch( Exception e )
+		{
+			System.out.println( "An error has occurred" );
+			e.printStackTrace();
+		}
 	}
 	
 	//MP: Mutator for snapshot density
