@@ -34,6 +34,13 @@ public class RR_Scheduler extends Scheduler
 					q.add(q.remove());
 			}
 		}
+		
+		if(q.isEmpty()){ //
+			qctr = quantum;
+			qctr--;
+			return processor;
+		}
+		
 		return null;
 	}
 
