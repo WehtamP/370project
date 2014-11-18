@@ -31,11 +31,11 @@ public class EDF_Scheduler extends RTScheduler {
 
 
 		//MG: Choose the one with a lower deadline
-		if((p1.getPERIOD() - p1.getCPU_BURST()) < (p2.getPERIOD() - p2.getCPU_BURST()) && p1.getCPU_BURST() > 0){
+		if((p1.getDL() < p2.getDL()) && p1.getCPU_BURST() > 0){
 
 			return false;
 		}
-		else if((p1.getPERIOD() - p1.getCPU_BURST()) > (p2.getPERIOD() - p2.getCPU_BURST()) && p2.getCPU_BURST() > 0){
+		else if((p1.getDL() > p2.getDL()) && p2.getCPU_BURST() > 0){
 
 			return true;
 		}
