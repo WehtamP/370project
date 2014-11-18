@@ -22,6 +22,8 @@ public class Runner
 		RR_Scheduler RRsch = new RR_Scheduler( processes, InputProcessing.getQuantum() );
 		SJR_Scheduler SJRsch = new SJR_Scheduler( processes );
 		Priority_Scheduler PrioritySch = new Priority_Scheduler( processes );
+		PRM_Scheduler PRMsch = new PRM_Scheduler( processes );
+		EDF_Scheduler EDFsch = new EDF_Scheduler( processes );
 		
 		//MP: Setup each individual simulation
 		simulations.add( new Simulation( FCFSsch ) );
@@ -29,6 +31,8 @@ public class Runner
 		simulations.add( new Simulation( RRsch ) );
 		simulations.add( new Simulation( SJRsch ) );
 		simulations.add( new Simulation( PrioritySch ) );
+		simulations.add( new Simulation( PRMsch ) );
+		simulations.add( new Simulation( EDFsch ) );
 		
 		//MP: Run the simulations;
 		for( Simulation s: simulations )

@@ -61,7 +61,7 @@ public class RankingGenerator
 		}
 	}
 	
-	//MP: method that returns false if s1 is better than s2, 1 otherwise
+	//MP: method that returns false if s1 is better than s2, true otherwise
 	private boolean compareNormal( Simulation s1, Simulation s2 )
 	{
 		if( s1.getCPU_UTILIZATION() > s2.getCPU_UTILIZATION() ) //MP: Compare CPU Utilization
