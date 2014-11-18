@@ -48,6 +48,7 @@ public class Ranking_Generator
 	//MP: Method to order the nSimulations into
 	private void generateNormalRankings()
 	{
+		Static_Stuff.swap(nSimulations, 0, 4);
 		boolean finished = false;
 		
 		while( !finished )
