@@ -95,16 +95,9 @@ public class Process
 		STATE = state1;
 	}
 	
-	public int getDL(){ //MG: Gets time until it must start processing to meet its deadline
-		if(IO_START >= 0){
-			return PERIOD - IO_START;
-		}
-		return PERIOD - CPU_BURST;
-	}
-	
 	public void act() //MP: Updates process values (WAIT_TIME, IO_BURST, IO_START, CPU_BURST) depending on the state of process when this method is called
 	{
-		if( IO_START == 0 ) //MP: If the process has started IO Burst, set IO_START to be < 0 so that it doesn't start IO Bursting again.
+		if( IO_START == 0 ) //MP: If the process has started IO Burst, set IO_START to be > 0 so that it doesn't start IO Bursting again.
 		{
 			IO_START--;
 		}
@@ -122,11 +115,9 @@ public class Process
 			PERIOD = initP;
 		}
 		
-		if( STATE == PROCESS_STATE.WAITING_CPU )
-		{//MP: If the process is waiting for the CPU, its total wait time increases.
+		if( STATE == PROCESS_STATE.WAITING_CPU ) //MP: If the process is waiting for the CPU, its total wait time increases.
 			WAIT_TIME++;
 			PERIOD--;
-		}
 
 	}	
 }

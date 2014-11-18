@@ -24,4 +24,10 @@ public abstract class RTScheduler extends Scheduler {
 				violations++;
 		}
 	}
+	
+	//MP: Accessor for number of deadline violations
+	public int getNumViolations()
+	{
+		return violations;
+	}
 }
