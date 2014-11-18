@@ -90,6 +90,14 @@ public class Process
 		return IO_START;
 	}
 	
+	public int getDL()       //MG: Returns number of cycles before it must start processing in order to meet its deadline
+	{
+		if(IO_START >= 1)
+			return PERIOD - IO_START;
+		
+		return PERIOD - CPU_BURST;
+	}
+	
 	public void setSTATE( PROCESS_STATE state1 ) //MP: Mutator for STATE
 	{
 		STATE = state1;
