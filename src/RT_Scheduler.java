@@ -1,12 +1,12 @@
 import java.util.Collection;
 
 
-public abstract class RTScheduler extends Scheduler {
+public abstract class RT_Scheduler extends Scheduler {
 
 	protected int violations;
 
 	//MG: Subclass of scheduler for any commonalities between PRM and EDF
-	RTScheduler(Collection<Process> eColl, Process procs[]){
+	RT_Scheduler(Collection<Process> eColl, Process procs[]){
 		super(eColl, procs);
 		violations = 0;
 	}

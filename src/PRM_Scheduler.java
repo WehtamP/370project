@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 
 
-public class PRM_Scheduler extends RTScheduler {
+public class PRM_Scheduler extends RT_Scheduler {
 
 	PRM_Scheduler(Process arr[]){
 		super(new LinkedList<Process>(), arr);

@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 
 
-public class EDF_Scheduler extends RTScheduler {
+public class EDF_Scheduler extends RT_Scheduler {
 
 	EDF_Scheduler(Process arr[]){
 		super(new LinkedList<Process>(), arr);

@@ -74,7 +74,7 @@ public class Simulation
 		writer.write( "\nCPU Utilization for " + SCHEDULER.getName() + " = " + CPU_UTILIZATION * 100 + "%" );
 		
 		if( getSimulationType() == Sim_Type.Realtime )
-			writer.write( "\nDeadline Violations for " + getSchedulerName() + " = " + ( (RTScheduler) SCHEDULER ).getNumViolations() );
+			writer.write( "\nDeadline Violations for " + getSchedulerName() + " = " + ( (RT_Scheduler) SCHEDULER ).getNumViolations() );
 		
 		writer.write( "\n======================================================" );
 		writer.close();
