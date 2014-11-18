@@ -54,6 +54,10 @@ public class Simulation
 		System.out.println( "Total Turn-around Time for " + SCHEDULER.getName() + " = " + TURNAROUND_TIME );
 		System.out.println( "Average Wait Time for " + SCHEDULER.getName() + " = " + AVERAGE_WAIT_TIME );
 		System.out.println( "CPU Utilization for " + SCHEDULER.getName() + " = " + CPU_UTILIZATION * 100 + "%" );
+		
+		if( getSimulationType() == Sim_Type.Realtime )
+			System.out.println( "Deadline Violations for " + getSchedulerName() + " = " + ( (RTScheduler) SCHEDULER ).getNumViolations() );
+		
 		System.out.println( "======================================================" );
 	}
 	

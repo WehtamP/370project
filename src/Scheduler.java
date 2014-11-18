@@ -189,9 +189,9 @@ public abstract class Scheduler {
 	}
 
 	//MP: Returns the average wait time
-	public float getAverageWaitTime()
+	public double getAverageWaitTime()
 	{
-		float waitTime = 0;
+		double waitTime = 0;
 
 		for( Process p: originalProcessList ) //MP: Sum the wait times
 			waitTime += p.getWAIT_TIME();
