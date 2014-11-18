@@ -22,7 +22,6 @@ public class Process
 		PRIORITY = arr[ 3 ];
 		PERIOD = arr[ 4 ];
 		initP = PERIOD;
-		System.out.println("initP = " + initP);
 		IO_START = CPU_BURST / 2; //MP: IO bursts start after 1/2 CPU burst done.
 		
 		if( IO_BURST == 0 ) //MP: If no IO_BURST, set IO_START to -1
@@ -40,6 +39,7 @@ public class Process
 		IO_BURST = p.getIO_BURST();
 		PRIORITY = p.getPRIORITY();
 		PERIOD = p.getPERIOD();
+		initP = PERIOD;
 		
 		IO_START = CPU_BURST / 2; //MP: IO bursts start after 1/2 CPU burst done.
 		
