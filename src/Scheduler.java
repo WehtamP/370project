@@ -1,3 +1,5 @@
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -123,15 +125,6 @@ public abstract class Scheduler {
 		}
 	}
 
-	//MP: Prints the ready queue
-	public void printReadyQueue()
-	{
-		for( Process p: readyQueue )
-		{
-			Static_Stuff.printProcessInfo( p );
-		}
-	}
-
 	//MP: Checks to see if all processes have finished executing, if yes, finished = true
 	public boolean isFinished()
 	{		
@@ -153,39 +146,47 @@ public abstract class Scheduler {
 		return true;
 	}
 
-	//MP: Prints a snapshot of what's currently in the CPU
+	//MP: Prints a snapshot of what's currently in the CPU to snapshot.dat
 	public void printSnapshot( int clock )
 	{	
+		try
+		{
+		BufferedWriter writer = Static_Stuff.getSnapshotWriter();
 		boolean exists = false; //MP: Boolean used to determine when to print out none.
-		System.out.println( "==================================================" );
-		System.out.println( this.getName() + " Snapshot at Cycle " + clock );
+		writer.write( "\n==================================================" );
+		writer.write( "\n" + this.getName() + " Snapshot at Cycle " + clock );
 
 		if( processor != null )
-			System.out.println( "\nProcess Currently Processing: " + processor.getP_ID() + " (CPU Burst - " + processor.getCPU_BURST() + "\tIO Burst - " + processor.getIO_BURST() +")" );
+			writer.write( "\n\nProcess Currently Processing: " + processor.getP_ID() + " (CPU Burst - " + processor.getCPU_BURST() + "\tIO Burst - " + processor.getIO_BURST() +")" );
 		else
-			System.out.println( "\nProcess Currently Processing: " + "None" );
+			writer.write( "\nProcess Currently Processing: " + "None" );
 
-		System.out.println( "\nProcesses in Ready Queue");
+		writer.write( "\n\nProcesses in Ready Queue");
 
 		for( Process pr: readyQueue ) //MP: Print ready queue
 		{
-			System.out.println( ">" + pr.getP_ID() + " (CPU Burst - " + pr.getCPU_BURST() + "\tIO Burst - " + pr.getIO_BURST() + ")" );
+			writer.write( "\n>" + pr.getP_ID() + " (CPU Burst - " + pr.getCPU_BURST() + "\tIO Burst - " + pr.getIO_BURST() + ")" );
 			exists = true;
 		}
 		if( !exists )
-			System.out.println( "None" );
+			writer.write( "\nNone" );
 		
-		System.out.println( "\nProcesses in IO" );
+		writer.write( "\n\nProcesses in IO" );
 		
 		exists = false;
 		for( Process pr: IO ) //MP: Print IO
 		{
-			System.out.println( ">" + pr.getP_ID() + " (CPU Burst - " + pr.getCPU_BURST() + "\tIO Burst - " + pr.getIO_BURST() + "\tPERIOD - " + pr.getPERIOD() + ")" );
+			writer.write( "\n>" + pr.getP_ID() + " (CPU Burst - " + pr.getCPU_BURST() + "\tIO Burst - " + pr.getIO_BURST() + ")" );
 			exists = true;
 		}
 		
 		if( !exists )
-			System.out.println( "None" );
+			writer.write( "\nNone" );
+		}
+		catch( Exception e )
+		{
+			e.printStackTrace();
+		}
 	}
 
 	//MP: Returns the average wait time
