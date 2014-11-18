@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.util.LinkedList;
 
-public class Runner 
+public class Main 
 {
 	public static void main( String[] args ) throws IOException
 	{		
@@ -9,6 +9,18 @@ public class Runner
 		{
 			System.out.println( "Warning, you are using the simulation incorrectly.");
 			System.out.println( "Correct usage is \"simulation processfile.dat 10" );
+			
+			if( args.length == 1 )
+			{
+				System.out.println( "No second argument included. Snapshot density defaulting to 10" );
+				Static_Stuff.setSnapshotDensity( 10 );
+			}
+			
+			if( args.length == 0 )
+			{
+				System.out.println( "No arguments provided, program exiting" );
+				System.exit( 1 );
+			}
 		}
 		else
 		{	
@@ -52,6 +64,7 @@ public class Runner
 		for( Simulation s: simulations )
 			s.run();
 		
+		System.out.println( "The simulations were successful." );
 		
 		//MP: Generate the logs
 		for( Simulation s: simulations )
@@ -62,5 +75,7 @@ public class Runner
 		ranking.print();
 		
 		Static_Stuff.closeWriters();
+		
+		System.out.println( "FileReport.dat and snapshot.dat generated successfully" );
 	}
 }
