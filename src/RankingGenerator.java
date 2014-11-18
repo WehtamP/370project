@@ -70,9 +70,9 @@ public class RankingGenerator
 			return true;
 		else //MP: If not different, compare avg wait time
 		{
-			if( s1.getAVERAGE_WAIT_TIME() > s2.getAVERAGE_WAIT_TIME() )
+			if( s1.getAVERAGE_WAIT_TIME() < s2.getAVERAGE_WAIT_TIME() )
 				return false;
-			else if( s2.getAVERAGE_WAIT_TIME() > s1.getAVERAGE_WAIT_TIME() )
+			else if( s2.getAVERAGE_WAIT_TIME() < s1.getAVERAGE_WAIT_TIME() )
 				return true;
 			else //MP: if not different, compare throughput
 			{
@@ -82,7 +82,7 @@ public class RankingGenerator
 					return true;
 				else //MP: if not different, compare turnaround times
 				{
-					if( s1.getTURNAROUND_TIME() > s2.getTURNAROUND_TIME() )
+					if( s1.getTURNAROUND_TIME() < s2.getTURNAROUND_TIME() )
 						return false;
 					else
 						return true;
